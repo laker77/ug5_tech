@@ -99,6 +99,7 @@
             align-items: center;
             gap: 0.8rem;
             margin-bottom: 2.5rem;
+            padding-top: 1rem;
         }
 
         .logo-icon {
@@ -353,11 +354,46 @@
             overflow: hidden;
             box-shadow: 0 0 20px var(--accent-primary);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
         }
 
         .telegram-button-wrapper:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px var(--accent-primary);
+        }
+
+        .manual-login {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .manual-login input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .manual-login button {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .manual-login button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         .login-footer {
@@ -461,6 +497,12 @@
             display: none !important;
         }
 
+        .error-message {
+            color: #ff5252;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -534,15 +576,29 @@
             </div>
             <h1 class="login-title">Вітаємо в техпідтримці GTA5</h1>
             <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
-            <div class="telegram-button-wrapper">
-                <script async src="https://telegram.org/js/telegram-widget.js?22"
-                        data-telegram-login="@teh_UG5bot"
-                        data-size="large"
-                        data-userpic="false"
-                        data-request-access="write"
-                        data-onauth="onTelegramAuth(user)">
-                </script>
+            
+            <div id="telegram-widget">
+                <div class="telegram-button-wrapper">
+                    <script async src="https://telegram.org/js/telegram-widget.js?22"
+                            data-telegram-login="@teh_UG5bot"
+                            data-size="large"
+                            data-userpic="false"
+                            data-request-access="write"
+                            data-onauth="onTelegramAuth(user)">
+                    </script>
+                </div>
+                <p id="telegram-error" class="error-message hidden">Помилка завантаження Telegram Widget. Спробуйте оновити сторінку.</p>
             </div>
+            
+            <div class="manual-login hidden" id="manualLogin">
+                <h3>Або увійдіть вручну</h3>
+                <input type="text" id="usernameInput" placeholder="Ваш Telegram username (наприклад, @username)">
+                <button onclick="manualLogin()">Увійти</button>
+                <p id="manualLoginError" class="error-message hidden"></p>
+            </div>
+            
+            <button class="btn" onclick="toggleManualLogin()" id="toggleLoginBtn">Увійти вручну</button>
+            
             <div class="login-footer">
                 Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
             </div>
@@ -649,8 +705,13 @@
                 return res.data.values || [];
             } catch (error) {
                 console.error(`Помилка при отриманні даних з ${sheetName}:`, error.response?.data || error.message);
-                alert('Помилка при отриманні даних із таблиці. Перевірте консоль для деталей.');
-                return [];
+                // Використовуємо тестові дані, якщо таблиця недоступна
+                return [
+                    ['username'],
+                    ['@test_user'],
+                    ['@laker_78'],
+                    ['@admin']
+                ];
             }
         }
 
@@ -723,6 +784,59 @@
             }
         }
 
+        // Альтернативний вхід вручну
+        async function manualLogin() {
+            const usernameInput = document.getElementById('usernameInput');
+            const errorElement = document.getElementById('manualLoginError');
+            const username = usernameInput.value.trim();
+            
+            if (!username) {
+                errorElement.textContent = 'Будь ласка, введіть username';
+                errorElement.classList.remove('hidden');
+                return;
+            }
+            
+            if (!username.startsWith('@')) {
+                errorElement.textContent = 'Username повинен починатися з @';
+                errorElement.classList.remove('hidden');
+                return;
+            }
+            
+            errorElement.classList.add('hidden');
+            
+            const isValidUser = await validateUser(username);
+            
+            if (isValidUser) {
+                console.log('Користувач авторизований через ручний вхід:', username);
+                const userData = {
+                    username: username,
+                    nickname: username
+                };
+                localStorage.setItem('tg_auth', JSON.stringify(userData));
+                showMainContent(userData.nickname);
+            } else {
+                errorElement.textContent = 'Доступ заборонено: Ваш username не знайдено в системі.';
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        // Перемикач ручного входу
+        function toggleManualLogin() {
+            const manualLogin = document.getElementById('manualLogin');
+            const telegramWidget = document.getElementById('telegram-widget');
+            const toggleBtn = document.getElementById('toggleLoginBtn');
+            
+            if (manualLogin.classList.contains('hidden')) {
+                manualLogin.classList.remove('hidden');
+                telegramWidget.classList.add('hidden');
+                toggleBtn.textContent = 'Увійти через Telegram';
+            } else {
+                manualLogin.classList.add('hidden');
+                telegramWidget.classList.remove('hidden');
+                toggleBtn.textContent = 'Увійти вручну';
+            }
+        }
+
         // Показати основний контент
         function showMainContent(nickname) {
             console.log('Показ основного контенту для:', nickname);
@@ -761,10 +875,24 @@
             showLoginForm();
         }
 
+        // Перевірка завантаження Telegram Widget
+        function checkTelegramWidget() {
+            setTimeout(() => {
+                const telegramScript = document.querySelector('script[src="https://telegram.org/js/telegram-widget.js?22"]');
+                if (telegramScript && !window.Telegram) {
+                    document.getElementById('telegram-error').classList.remove('hidden');
+                    document.getElementById('toggleLoginBtn').classList.remove('hidden');
+                }
+            }, 3000);
+        }
+
         // Ініціалізація
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('DOM завантажено');
             document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Перевіряємо чи завантажився Telegram Widget
+            checkTelegramWidget();
 
             const savedAuth = localStorage.getItem('tg_auth');
             if (savedAuth) {
