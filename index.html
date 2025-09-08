@@ -311,6 +311,20 @@
             color: var(--danger);
             margin-top: 1rem;
             display: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 4px solid var(--danger);
+        }
+
+        .success-message {
+            color: var(--success);
+            margin-top: 1rem;
+            display: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background-color: rgba(0, 200, 83, 0.1);
+            border-left: 4px solid var(--success);
         }
 
         .loading {
@@ -320,6 +334,41 @@
 
         .loading i {
             animation: spin 1s infinite linear;
+        }
+
+        .user-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-text {
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-username {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         @keyframes spin {
@@ -362,9 +411,10 @@
             
             <!-- Telegram Login Widget -->
             <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                data-telegram-login="@teh_UG5bot" 
+                data-telegram-login="teh_UG5bot" 
                 data-size="large" 
-                data-auth-url="https://your_domain.com/auth" 
+                data-radius="8"
+                data-auth-url="auth.html" 
                 data-request-access="write"></script>
             
             <div class="loading" id="loading">
@@ -373,6 +423,20 @@
             
             <div class="error-message" id="errorMessage">
                 Доступ заборонено. Ваш обліковий запис не знайдено в списку дозволених.
+            </div>
+
+            <div class="success-message" id="successMessage">
+                Успішна автентифікація! Перевіряємо доступ...
+            </div>
+
+            <div class="user-info" id="userInfo">
+                <div class="user-details">
+                    <img id="userAvatar" class="user-avatar" src="" alt="Аватар">
+                    <div class="user-text">
+                        <div id="userName" class="user-name"></div>
+                        <div id="userUsername" class="user-username"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -450,17 +514,59 @@
     </div>
 
     <script>
-        // Функція для обробки даних з Telegram Login Widget
-        function onTelegramAuth(user) {
+        // Замініть на URL вашого Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/ВАШ_SCRIPT_ID/exec';
+        
+        // Функція для перевірки параметрів URL після автентифікації
+        function checkAuthParams() {
+            const urlParams = new URLSearchParams(window.location.hash.substring(1));
+            
+            if (urlParams.has('tgAuthResult')) {
+                try {
+                    const authResult = JSON.parse(decodeURIComponent(urlParams.get('tgAuthResult')));
+                    
+                    if (authResult && authResult.user) {
+                        processUserData(authResult.user);
+                        return true;
+                    }
+                } catch (e) {
+                    console.error('Помилка парсингу даних автентифікації:', e);
+                }
+            }
+            return false;
+        }
+        
+        // Функція для обробки даних користувача
+        function processUserData(user) {
+            // Показати інформацію про користувача
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userName').textContent = `${user.first_name} ${user.last_name || ''}`;
+            document.getElementById('userUsername').textContent = `@${user.username}`;
+            
+            if (user.photo_url) {
+                document.getElementById('userAvatar').src = user.photo_url;
+            }
+            
+            // Приховати віджет і показати повідомлення про успіх
+            document.querySelector('.telegram-widget').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Перевірити доступ через Google Apps Script
+            checkAccess(user.username);
+        }
+        
+        // Функція для перевірки доступу
+        function checkAccess(username) {
             const loading = document.getElementById('loading');
             const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
             
             // Показати завантаження
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
             // Перевірити доступ через Google Apps Script
-            fetch(`${SCRIPT_URL}?username=${encodeURIComponent(user.username)}`)
+            fetch(`${SCRIPT_URL}?username=${encodeURIComponent(username)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.access) {
@@ -469,17 +575,19 @@
                         document.getElementById('mainContent').style.display = 'block';
                         
                         // Зберегти перевірений доступ в localStorage
-                        localStorage.setItem('telegramUser', JSON.stringify(user));
+                        localStorage.setItem('telegramUsername', username);
                         localStorage.setItem('accessGranted', 'true');
                     } else {
                         // Доступ заборонено
                         errorMessage.style.display = 'block';
+                        successMessage.style.display = 'none';
                     }
                 })
                 .catch(error => {
                     console.error('Помилка:', error);
                     errorMessage.textContent = 'Сталася помилка при перевірці доступу. Спробуйте ще раз.';
                     errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
                 })
                 .finally(() => {
                     loading.style.display = 'none';
@@ -488,26 +596,30 @@
         
         // Перевірити чи є вже наданий доступ при завантаженні сторінки
         document.addEventListener('DOMContentLoaded', function() {
-            const accessGranted = localStorage.getItem('accessGranted');
-            const telegramUser = JSON.parse(localStorage.getItem('telegramUser') || '{}');
-            
-            if (accessGranted === 'true' && telegramUser.username) {
-                // Перевірити чи доступ все ще дійсний
-                fetch(`${SCRIPT_URL}?username=${encodeURIComponent(telegramUser.username)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.access) {
-                            document.getElementById('accessCheck').style.display = 'none';
-                            document.getElementById('mainContent').style.display = 'block';
-                        } else {
-                            // Якщо доступ більше не дійсний
-                            localStorage.removeItem('accessGranted');
-                            localStorage.removeItem('telegramUser');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Помилка перевірки доступу:', error);
-                    });
+            // Спочатку перевіримо параметри автентифікації в URL
+            if (!checkAuthParams()) {
+                // Якщо параметрів немає, перевіримо localStorage
+                const accessGranted = localStorage.getItem('accessGranted');
+                const telegramUsername = localStorage.getItem('telegramUsername');
+                
+                if (accessGranted === 'true' && telegramUsername) {
+                    // Перевірити чи доступ все ще дійсний
+                    fetch(`${SCRIPT_URL}?username=${encodeURIComponent(telegramUsername)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.access) {
+                                document.getElementById('accessCheck').style.display = 'none';
+                                document.getElementById('mainContent').style.display = 'block';
+                            } else {
+                                // Якщо доступ більше не дійсний
+                                localStorage.removeItem('accessGranted');
+                                localStorage.removeItem('telegramUsername');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Помилка перевірки доступу:', error);
+                        });
+                }
             }
         });
 
