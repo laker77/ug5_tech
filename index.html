@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Техпідтримка GTA5 | Український сервер</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #1d1d1d;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding-left: 2rem;
+            transition: var(--transition);
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .features {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Стилі для форми перевірки доступу */
+        .access-check {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .access-form {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .access-form h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .access-form p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .loading i {
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-left: 0;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .access-form {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Перевірка доступу -->
+    <div class="access-check" id="accessCheck">
+        <div class="access-form">
+            <h2>Вхід через Telegram</h2>
+            <p>Будь ласка, увійдіть через свій обліковий запис Telegram для отримання доступу</p>
+            
+            <!-- Telegram Login Widget -->
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                data-telegram-login="your_bot_username" 
+                data-size="large" 
+                data-auth-url="https://your_domain.com/auth" 
+                data-request-access="write"></script>
+            
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-2x"></i>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Доступ заборонено. Ваш обліковий запис не знайдено в списку дозволених.
+            </div>
+        </div>
+    </div>
+
+    <!-- Основний контент (прихований до перевірки) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Бургер-меню -->
+        <div class="burger-menu" id="burgerMenu">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <!-- Бічне меню -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-icon">GTA</div>
+                <div class="logo-text">Тех<span>Підтримка</span></div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#"><i class="fas fa-home"></i> Головна</a></li>
+                <li><a href="#"><i class="fas fa-tools"></i> Вирішення проблем</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Посібник</a></li>
+                <li><a href="#"><i class="fas fa-database"></i> База знань</a></li>
+                <li><a href="#"><i class="fas fa-headset"></i> Контакти</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content" id="contentWrapper">
+            <div class="container">
+                <section class="hero">
+                    <h1>Технічна підтримка GTA 5</h1>
+                    <p>Ласкаво просимо до системи підтримки операторів українського сервера GTA 5. Тут ви знайдете все необхідне для ефективного вирішення технічних проблем та надання якісної допомоги гравцям.</p>
+                </section>
+                
+                <section class="features">
+                    <h2 class="section-title">Можливості системи</h2>
+                    
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <h3>Вирішення проблем</h3>
+                            <p>Детальні інструкції з вирішення технічних проблем, з якими стикаються гравці. Пошук за категоріями та ключовими словами.</p>
+                            <a href="#" class="btn">Детальніше</a>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3>Посібник оператора</h3>
+                            <p>Повний посібник для операторів технічної підтримки, що містить стандарти роботи, процедури ескалації та корисні поради.</p>
+                            <a href="#" class="btn">Детальніше</a>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h3>База знань</h3>
+                            <p>Централізована база знань з усіма технічними посібниками, відповідями на часті запитання та корисними ресурсами.</p>
+                            <a href="#" class="btn">Детальніше</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <footer>
+                <div class="container">
+                    <p>Технічна підтримка GTA 5 | Український сервер © 2023</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Функція для обробки даних з Telegram Login Widget
+        function onTelegramAuth(user) {
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Показати завантаження
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Перевірити доступ через Google Apps Script
+            fetch(`${SCRIPT_URL}?username=${encodeURIComponent(user.username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.access) {
+                        // Доступ дозволено - показати контент
+                        document.getElementById('accessCheck').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
+                        
+                        // Зберегти перевірений доступ в localStorage
+                        localStorage.setItem('telegramUser', JSON.stringify(user));
+                        localStorage.setItem('accessGranted', 'true');
+                    } else {
+                        // Доступ заборонено
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Помилка:', error);
+                    errorMessage.textContent = 'Сталася помилка при перевірці доступу. Спробуйте ще раз.';
+                    errorMessage.style.display = 'block';
+                })
+                .finally(() => {
+                    loading.style.display = 'none';
+                });
+        }
+        
+        // Перевірити чи є вже наданий доступ при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessGranted = localStorage.getItem('accessGranted');
+            const telegramUser = JSON.parse(localStorage.getItem('telegramUser') || '{}');
+            
+            if (accessGranted === 'true' && telegramUser.username) {
+                // Перевірити чи доступ все ще дійсний
+                fetch(`${SCRIPT_URL}?username=${encodeURIComponent(telegramUser.username)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.access) {
+                            document.getElementById('accessCheck').style.display = 'none';
+                            document.getElementById('mainContent').style.display = 'block';
+                        } else {
+                            // Якщо доступ більше не дійсний
+                            localStorage.removeItem('accessGranted');
+                            localStorage.removeItem('telegramUser');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Помилка перевірки доступу:', error);
+                    });
+            }
+        });
+
+        // Функція для керування бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const contentWrapper = document.getElementById('contentWrapper');
+            
+            sidebar.classList.toggle('active');
+            
+            if (sidebar.classList.contains('active')) {
+                contentWrapper.style.paddingLeft = '320px';
+            } else {
+                contentWrapper.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Закрити меню при кліку поза ним
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            const contentWrapper = document.getElementById('contentWrapper');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                contentWrapper.style.paddingLeft = '2rem';
+            }
+        });
+    </script>
+</body>
+</html>
