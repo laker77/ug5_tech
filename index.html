@@ -378,7 +378,6 @@
 
         /* Access Denied Section */
         #access-denied-section {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -459,7 +458,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         @keyframes pulse {
@@ -523,7 +522,7 @@
             <li><a href="#"><i class="fas fa-book"></i> Посібник</a></li>
             <li><a href="#"><i class="fas fa-database"></i> База знань</a></li>
             <li><a href="#"><i class="fas fa-headset"></i> Контакти</a></li>
-            <li><a href="#" onclick="logout()" class="btn"><i class="fas fa-sign-out-alt"></i> Вийти</a></li>
+            <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Вийти</a></li>
         </ul>
     </div>
 
@@ -551,7 +550,7 @@
     </div>
 
     <!-- Секція відмови у доступі -->
-    <div id="access-denied-section">
+    <div id="access-denied-section" class="hidden">
         <div class="access-denied-content">
             <div class="access-denied-icon">🚫</div>
             <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
@@ -681,7 +680,8 @@
                     return false;
                 }
 
-                const userExists = sheetData.some(row => {
+                // Перевіряємо всі рядки, крім заголовка
+                const userExists = sheetData.slice(1).some(row => {
                     const username = row[usernameColIndex]?.trim();
                     return username && username.toLowerCase() === telegramUsername.toLowerCase();
                 });
@@ -726,33 +726,32 @@
         // Показати основний контент
         function showMainContent(nickname) {
             console.log('Показ основного контенту для:', nickname);
-            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('access-denied-section').classList.add('hidden');
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('burgerMenu').classList.remove('hidden');
             document.getElementById('logout-btn').classList.remove('hidden');
-            document.getElementById('access-denied-section').style.display = 'none';
         }
 
         // Показати сторінку відмови у доступі
         function showAccessDenied() {
             console.log('Показ сторінки відмови у доступі');
-            document.getElementById('access-denied-section').style.display = 'flex';
-            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('login-section').classList.add('hidden');
             document.getElementById('mainContent').classList.add('hidden');
-            document.getElementById('sidebar').classList.remove('active');
             document.getElementById('burgerMenu').classList.add('hidden');
             document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').classList.remove('hidden');
         }
 
         // Показати форму логіну
         function showLoginForm() {
             console.log('Показ форми логіну');
-            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('mainContent').classList.add('hidden');
-            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('access-denied-section').classList.add('hidden');
             document.getElementById('burgerMenu').classList.add('hidden');
             document.getElementById('logout-btn').classList.add('hidden');
-            document.getElementById('access-denied-section').style.display = 'none';
+            document.getElementById('sidebar').classList.remove('active');
         }
 
         // Функція виходу
