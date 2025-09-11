@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
-        /* Стили остаются без изменений */
         :root {
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
@@ -691,10 +690,9 @@
     </div>
 
     <script>
-        // Конфігурація
-        const BOT_TOKEN = '8368134168:AAHaU1VQOUaeDSce9g7QLia0idbTVpDDHDM'; // Токен вашого бота
-        const SERVER_URL = 'https://script.google.com/macros/s/AKfycbwkzbBaaCD6AeBXvAgSaR-ikz4RMR35KpW2hZUd45jeCSDIS-v2ZrkKTqoEDcKjz3lV/exec'; // URL вашого Google Apps Script
-
+        // Список дозволених адміністраторів (замінити на реальні дані)
+        const allowedAdmins = ['@laker_78', '@teh_UG5bot', '@test_user'];
+        
         // Бургер-меню логіка
         document.getElementById('burgerMenu').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -717,48 +715,23 @@
             }
         });
 
-        // Функція для виконання JSONP запитів
-        function jsonpRequest(url, callback) {
-            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.body.removeChild(script);
-                callback(data);
-            };
-
-            const script = document.createElement('script');
-            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-            document.body.appendChild(script);
-        }
-
-        // Перевірка авторизації користувача через сервер
-        function validateUser(telegramUsername, callback) {
-            try {
-                showLoading(true);
-                
-                // Використовуємо JSONP для обходу CORS
-                const encodedUsername = encodeURIComponent(telegramUsername);
-                const url = `${SERVER_URL}?action=validateUser&telegramUsername=${encodedUsername}&format=jsonp`;
-                
-                jsonpRequest(url, function(result) {
-                    showLoading(false);
-                    
-                    if (result.success) {
-                        callback(result.isValid);
-                    } else {
-                        console.error('Помилка перевірки авторизації:', result.error);
-                        callback(false);
-                    }
-                });
-            } catch (error) {
-                showLoading(false);
-                console.error('Помилка перевірки авторизації:', error);
-                callback(false);
-            }
+        // Перевірка авторизації користувача
+        async function validateUser(telegramUsername) {
+            console.log('Перевірка користувача:', telegramUsername);
+            
+            // Імітація запиту до сервера (замінити на реальну перевірку)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Перевірка в списку allowedAdmins
+                    const isValid = allowedAdmins.includes(telegramUsername);
+                    console.log('Результат перевірки:', isValid);
+                    resolve(isValid);
+                }, 1000);
+            });
         }
 
         // Функція авторизації через Telegram
-        function onTelegramAuth(user) {
+        async function onTelegramAuth(user) {
             console.log('Telegram auth triggered:', user);
             if (!user || !user.username) {
                 console.error('Помилка: Username invalid або відсутній', user);
@@ -767,36 +740,40 @@
                 return;
             }
 
-            // Додаємо @ до username, якщо його немає
-            const telegramUsername = user.username.startsWith('@') ? user.username : '@' + user.username;
+            const telegramUsername = '@' + user.username;
+            showLoading(true);
             
-            // Перевіряємо автентичність даних
-            validateUser(telegramUsername, function(isValid) {
-                if (isValid) {
+            try {
+                const isValidUser = await validateUser(telegramUsername);
+
+                if (isValidUser) {
                     console.log('Користувач авторизований:', telegramUsername);
                     const userData = {
                         username: telegramUsername,
-                        nickname: user.first_name || user.username,
-                        id: user.id
+                        nickname: user.first_name || user.username
                     };
                     localStorage.setItem('tg_auth', JSON.stringify(userData));
-                    sessionStorage.setItem('tg_auth', JSON.stringify(userData));
                     showMainContent(userData.nickname);
                 } else {
                     console.error('Користувача не знайдено:', telegramUsername);
                     alert('Доступ заборонено: Ваш username не знайдено в системі.');
                     localStorage.removeItem('tg_auth');
-                    sessionStorage.removeItem('tg_auth');
                     showAccessDenied();
                 }
-            });
+            } catch (error) {
+                console.error('Помилка перевірки авторизації:', error);
+                alert('Сталася помилка при перевірці авторизації. Спробуйте пізніше.');
+                showLoginForm();
+            } finally {
+                showLoading(false);
+            }
         }
 
         // Альтернативний вхід вручну
-        function manualLogin() {
+        async function manualLogin() {
             const usernameInput = document.getElementById('usernameInput');
             const errorElement = document.getElementById('manualLoginError');
-            let username = usernameInput.value.trim();
+            const username = usernameInput.value.trim();
             
             if (!username) {
                 errorElement.textContent = 'Будь ласка, введіть username';
@@ -804,28 +781,36 @@
                 return;
             }
             
+            let telegramUsername = username;
             if (!username.startsWith('@')) {
-                username = '@' + username;
+                telegramUsername = '@' + username;
             }
             
             errorElement.classList.add('hidden');
+            showLoading(true);
             
-            // Перевіряємо користувача на сервері
-            validateUser(username, function(isValid) {
-                if (isValid) {
-                    console.log('Користувач авторизований через ручний вхід:', username);
+            try {
+                const isValidUser = await validateUser(telegramUsername);
+                
+                if (isValidUser) {
+                    console.log('Користувач авторизований через ручний вхід:', telegramUsername);
                     const userData = {
-                        username: username,
-                        nickname: username
+                        username: telegramUsername,
+                        nickname: telegramUsername
                     };
                     localStorage.setItem('tg_auth', JSON.stringify(userData));
-                    sessionStorage.setItem('tg_auth', JSON.stringify(userData));
                     showMainContent(userData.nickname);
                 } else {
                     errorElement.textContent = 'Доступ заборонено: Ваш username не знайдено в системі.';
                     errorElement.classList.remove('hidden');
                 }
-            });
+            } catch (error) {
+                console.error('Помилка ручного входу:', error);
+                errorElement.textContent = 'Помилка підключення до сервера. Спробуйте пізніше.';
+                errorElement.classList.remove('hidden');
+            } finally {
+                showLoading(false);
+            }
         }
 
         // Перемикач ручного входу
@@ -880,7 +865,6 @@
         function logout() {
             console.log('Вихід із системи');
             localStorage.removeItem('tg_auth');
-            sessionStorage.removeItem('tg_auth');
             showLoginForm();
         }
 
@@ -901,8 +885,8 @@
         // Перевірка завантаження Telegram Widget
         function checkTelegramWidget() {
             setTimeout(() => {
-                const telegramScript = document.querySelector('script[src="https://telegram.org/js/telegram-widget.js?22"]');
-                if (telegramScript && !window.Telegram) {
+                const telegramWidget = document.querySelector('.telegram-button-wrapper iframe');
+                if (!telegramWidget) {
                     document.getElementById('telegram-error').classList.remove('hidden');
                     document.getElementById('toggleLoginBtn').classList.remove('hidden');
                 }
@@ -910,46 +894,37 @@
         }
 
         // Ініціалізація
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             console.log('DOM завантажено');
             document.getElementById('logout-btn').addEventListener('click', logout);
             
             // Перевіряємо чи завантажився Telegram Widget
             checkTelegramWidget();
 
-            // Перевіряємо чи є збережена авторизація
             const savedAuth = localStorage.getItem('tg_auth');
-            const sessionAuth = sessionStorage.getItem('tg_auth');
-            
-            // Віддаємо перевагу сесії, якщо вона є
-            const authData = sessionAuth || savedAuth;
-            
-            if (authData) {
+            if (savedAuth) {
                 try {
-                    console.log('Знайдено збережену авторизацію:', authData);
-                    const userData = JSON.parse(authData);
+                    console.log('Знайдено збережену авторизацію:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
                     const telegramUsername = userData.username;
 
-                    // Перевіряємо на сервері чи дійсний still користувач
+                    // Перевіряємо чи дійсний still користувач
                     showLoading(true);
-                    validateUser(telegramUsername, function(isValid) {
-                        showLoading(false);
-                        
-                        if (isValid) {
-                            console.log('Збережена авторизація валідна:', telegramUsername);
-                            showMainContent(userData.nickname);
-                        } else {
-                            console.error('Збережена авторизація невалідна:', telegramUsername);
-                            localStorage.removeItem('tg_auth');
-                            sessionStorage.removeItem('tg_auth');
-                            showLoginForm();
-                        }
-                    });
+                    const isValidUser = await validateUser(telegramUsername);
+                    showLoading(false);
+                    
+                    if (isValidUser) {
+                        console.log('Збережена авторизація валідна:', telegramUsername);
+                        showMainContent(userData.nickname);
+                    } else {
+                        console.error('Збережена авторизація невалідна:', telegramUsername);
+                        localStorage.removeItem('tg_auth');
+                        showLoginForm();
+                    }
                 } catch (e) {
                     showLoading(false);
-                    console.error('Помилка перевірки збереженої авторизації:', e);
+                    console.error('Помилка парсингу збереженої авторизації:', e);
                     localStorage.removeItem('tg_auth');
-                    sessionStorage.removeItem('tg_auth');
                     showLoginForm();
                 }
             } else {
