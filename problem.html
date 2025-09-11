@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Посібник оператора | Техпідтримка GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #1d1d1d;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding-left: 2rem;
+            transition: var(--transition);
+        }
+
+        .page-header {
+            padding: 6rem 0 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .guide-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .problem-section {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .problem-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .problem-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .problem-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .problem-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            padding-left: 0.5rem;
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 1rem;
+        }
+
+        .solution-section {
+            background-color: rgba(30, 30, 30, 0.5);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .solution-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .solution-title i {
+            color: var(--accent-primary);
+        }
+
+        .solution-steps {
+            padding-left: 1.5rem;
+        }
+
+        .solution-step {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 0.5rem;
+        }
+
+        .solution-step:before {
+            content: "•";
+            color: var(--accent-primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-block {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .important-note {
+            background-color: rgba(255, 171, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
+        }
+
+        /* Стили для авторизации */
+        #login-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(43, 127, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .telegram-button-wrapper {
+            display: inline-block;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .telegram-button-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(43, 127, 255, 0.7);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        #access-denied-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .access-denied-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 82, 82, 0.5);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .access-denied-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .access-denied-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .access-denied-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .back-to-login-btn {
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-to-login-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        #logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .main-content {
+                padding-left: 0;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .problem-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .problem-icon {
+                margin-bottom: 1rem;
+            }
+
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="login-section">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--text-primary);"></i>
+            </div>
+            <h1 class="login-title">Вхід у посібник техпідтримки</h1>
+            <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
+            <div class="telegram-button-wrapper">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="ticket_tracker_UG_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="login-footer">
+                Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран отказа в доступе -->
+    <div id="access-denied-section">
+        <div class="access-denied-content">
+            <div class="access-denied-icon">🚫</div>
+            <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
+            <p class="access-denied-message">
+                Ваш обліковий запис не має доступу до цієї системи.<br>
+                Будь ласка, зверніться до адміністратора для отримання додаткової інформації.
+            </p>
+            <button class="back-to-login-btn" onclick="logout()">Повернутися до входу</button>
+        </div>
+    </div>
+
+    <!-- Кнопка выхода -->
+    <button id="logout-btn" class="hidden">Вийти</button>
+
+    <!-- Бургер-меню -->
+    <div class="burger-menu hidden" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">GTA</div>
+            <div class="logo-text">Тех<span>Підтримка</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна</a></li>
+            <li><a href="#"><i class="fas fa-tools"></i> Вирішення проблем</a></li>
+            <li><a href="#" class="active"><i class="fas fa-book"></i> Посібник</a></li>
+            <li><a href="#"><i class="fas fa-database"></i> База знань</a></li>
+            <li><a href="#"><i class="fas fa-headset"></i> Контакти</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content hidden" id="mainContent">
+        <div class="container">
+            <section class="page-header">
+                <h1>Посібник оператора</h1>
+                <p>У цьому розділі наведено рішення найпоширеніших проблем, з якими стикаються користувачі.</p>
+            </section>
+            
+            <section class="guide-content">
+                <!-- Проблема 1 -->
+                <div class="problem-section">
+                    <div class="problem-header">
+                        <div class="problem-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <h2 class="problem-title">Помилка налаштування мікрофона в RAGE MP</h2>
+                    </div>
+                    
+                    <p class="problem-description">Налаштування недоступні, якщо ви не на сервері, або мікрофон не працює.</p>
+                    
+                    <div class="solution-section">
+                        <h3 class="solution-title"><i class="fas fa-wrench"></i> Рішення:</h3>
+                        <ol class="solution-steps">
+                            <li class="solution-step">Переконайтеся, що ви підключені до серверу.</li>
+                            <li class="solution-step">Відкрийте меню "Пуск" (або Windows у нижньому лівому кутку) – "Налаштування" – "Система" – "Звук" – "Додаткові параметри звуку".</li>
+                            <li class="solution-step">Знайдіть RAGE MP, оберіть "За замовчуванням" для вашого мікрофона.</li>
+                            <li class="solution-step">Вийдіть з гри, перезапустіть лаунчер або RAGE MP, підключіться до серверу та перевірте мікрофон.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- Проблема 2 -->
+                <div class="problem-section">
+                    <div class="problem-header">
+                        <div class="problem-icon">
+                            <i class="fas fa-mouse"></i>
+                        </div>
+                        <h2 class="problem-title">Мишка не рухається під час запуску гри</h2>
+                    </div>
+                    
+                    <p class="problem-description">Потрібно в налаштуваннях гри GTA V встановити в розділі керування RAW INPUT, щоб не було проблеми з неможливістю зміщення курсору.</p>
+                    
+                    <div class="solution-section">
+                        <h3 class="solution-title"><i class="fas fa-wrench"></i> Рішення:</h3>
+                        <ol class="solution-steps">
+                            <li class="solution-step">Запустіть одиночну гру (сюжетний режим). Спробуйте запустити гру в одиночному режимі, щоб перевірити, чи вона працює взагалі.</li>
+                            <li class="solution-step">Після цього застосуйте зміни і перезайдіть до серверу Ukraine GTA 5.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- Проблема 3 -->
+                <div class="problem-section">
+                    <div class="problem-header">
+                        <div class="problem-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 class="problem-title">Помилка запуску Ukraine GTA 5 через RAGE MP</h2>
+                    </div>
+                    
+                    <p class="problem-description">Зупинення гри, якщо у вас виникла помилка під час запуску Ukraine GTA 5 через RAGE MP.</p>
+                    
+                    <div class="solution-section">
+                        <h3 class="solution-title"><i class="fas fa-wrench"></i> Рішення:</h3>
+                        <ol class="solution-steps">
+                            <li class="solution-step">Запустіть гру в безпечному режимі. Помилка "БЕЗПЕЧНИй РЕЖИМ"? Це допоможе зникнути помилці. Перевірте налаштування, якщо проблема в них.</li>
+                            <li class="solution-step">Перезапустіть лаунчер RAGE MP та GTA 5. Вийдіть з обох програм, закрийте їх через Диспетчер завдань (Ctrl + Shift + Esc) і запустіть знову.</li>
+                            <li class="solution-step">Перевірте цілісність файлів. Якщо гра в Rockstar Launcher — у налаштуваннях перевірте цілісність файлів. Якщо в Steam — у властивостях GTA 5 перевірте локальні файли.</li>
+                            <li class="solution-step">Оновіть драйвери відеокарти через NVIDIA app (NVIDIA) або AMD Software (AMD).</li>
+                            <li class="solution-step">Запустіть лаунчер та гру від імені адміністратора (ПКМ по ярлику - Запустити від імені адміністратора).</li>
+                            <li class="solution-step">Перевстановіть RAGE MP або перевірте на оновлення. Видаліть RAGE MP (зазвичай C:\RAGEMP). Завантажте та встановіть останню версію з офіційного сайту.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- Проблема 4 -->
+                <div class="problem-section">
+                    <div class="problem-header">
+                        <div class="problem-icon">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h2 class="problem-title">Помилка підключення до UKRAINE GTAS та сторонніх серверів RAGE MP</h2>
+                    </div>
+                    
+                    <p class="problem-description">Якщо гра не впускає в UKRAINE GTAS і не перебуває у блокуванні на сервері, при цьому не може підключатись на сторонні сервера RAGE MP з помилкою "Connection test. Reconnecting".</p>
+                    
+                    <div class="solution-section">
+                        <h3 class="solution-title"><i class="fas fa-wrench"></i> Рішення:</h3>
+                        <ol class="solution-steps">
+                            <li class="solution-step">Переконайтеся, що запущені лаунчер Rockstar та Social Club.</li>
+                        </ol>
+                        
+                        <div class="important-note">
+                            <p><strong>Примітка:</strong> Якщо проблема не вирішена, перевірте мережеві налаштування та файрвол. Іноді може знадобитися додаткове налаштування портів.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Технічна підтримка GTA 5 | Український сервер © 2023</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
+        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+        const SHEET_NAME = 'Users'; // Замените на точное имя таблицы
+
+        // Функция для получения данных из Google Sheets
+        async function getSheetData(sheetName) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+                console.log('Fetching data from:', url);
+                const res = await axios.get(url, { timeout: 10000 });
+                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+                return res.data.values || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
+                return [];
+            }
+        }
+
+        // Обработка авторизации через Telegram
+        async function onTelegramAuth(user) {
+            console.log('Telegram auth triggered:', user);
+            if (!user || !user.username) {
+                console.error('Invalid user data:', user);
+                showAccessDenied();
+                return;
+            }
+
+            const telegramUsername = '@' + user.username;
+            console.log('Processing user:', telegramUsername);
+
+            try {
+                const usersData = await getSheetData(SHEET_NAME);
+                if (!usersData.length) {
+                    console.error('No users data found in sheet:', SHEET_NAME);
+                    showAccessDenied();
+                    return;
+                }
+
+                const headers = usersData[0];
+                console.log('Sheet headers:', headers);
+                const telegramColIndex = headers.indexOf('Telegram');
+
+                if (telegramColIndex === -1) {
+                    console.error('Telegram column not found in headers:', headers);
+                    showAccessDenied();
+                    return;
+                }
+
+                const userRow = usersData.find(row => 
+                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+                );
+
+                if (userRow) {
+                    console.log('User found in users data:', userRow);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('User not found in users data:', telegramUsername);
+                    localStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error('Error during authorization check:', error.message, error.response?.data);
+                showAccessDenied();
+            }
+        }
+
+        // Показать основной контент после авторизации
+        function showMainContent(nickname) {
+            console.log('Showing main content for:', nickname);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('burgerMenu').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = `Вітаємо, ${nickname}!`;
+        }
+
+        // Показать экран отказа в доступе
+        function showAccessDenied() {
+            console.log('Showing access denied section');
+            document.getElementById('access-denied-section').style.display = 'flex';
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+        }
+
+        // Показать форму входа
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = 'Посібник оператора';
+        }
+
+        // Выход из системы
+        function logout() {
+            console.log('Logging out');
+            localStorage.removeItem('tg_auth');
+            showLoginForm();
+        }
+
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('active');
+            
+            if (sidebar.classList.contains('active')) {
+                mainContent.style.paddingLeft = '320px';
+            } else {
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            const savedAuth = localStorage.getItem('tg_auth');
+            if (savedAuth) {
+                try {
+                    console.log('Found saved auth:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
+                    console.log('Checking user in sheet:', userData.username);
+                    // Проверяем, существует ли пользователь в таблице
+                    getSheetData(SHEET_NAME).then(usersData => {
+                        if (!usersData.length) {
+                            console.error('No users data found in sheet:', SHEET_NAME);
+                            showAccessDenied();
+                            return;
+                        }
+                        const headers = usersData[0];
+                        console.log('Sheet headers:', headers);
+                        const telegramColIndex = headers.indexOf('Telegram');
+                        if (telegramColIndex === -1) {
+                            console.error('Telegram column not found in headers:', headers);
+                            showAccessDenied();
+                            return;
+                        }
+                        const userExists = usersData.some(row => 
+                            row[telegramColIndex]?.trim().toLowerCase() === userData.username.toLowerCase()
+                        );
+                        if (userExists) {
+                            console.log('User verified:', userData.username);
+                            showMainContent(userData.nickname);
+                        } else {
+                            console.error('User not found in users data:', userData.username);
+                            localStorage.removeItem('tg_auth');
+                            showAccessDenied();
+                        }
+                    }).catch(error => {
+                        console.error('Error during authorization check:', error.message, error.response?.data);
+                        showAccessDenied();
+                    });
+                } catch (e) {
+                    console.error('Error parsing saved auth:', e);
+                    localStorage.removeItem('tg_auth');
+                    showLoginForm();
+                }
+            } else {
+                console.log('No saved auth, showing login form');
+                showLoginForm();
+            }
+        });
+    </script>
+</body>
+</html>
