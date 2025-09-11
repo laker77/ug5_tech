@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мануал з роботи з тікетами | Техпідтримка GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #1d1d1d;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding-left: 2rem;
+            transition: var(--transition);
+        }
+
+        .page-header {
+            padding: 6rem 0 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .manual-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, rgba(43, 127, 255, 0.1) 0%, rgba(108, 66, 245, 0.1) 100%);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .manual-section {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-title i {
+            color: var(--accent-primary);
+        }
+
+        .warning-note {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .warning-note i {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .step-container {
+            margin-bottom: 2rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.8rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-content {
+            padding-left: 2.5rem;
+        }
+
+        .example-box {
+            background-color: rgba(30, 30, 30, 0.5);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent-primary);
+        }
+
+        .code-block {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .response-box {
+            background-color: rgba(0, 200, 83, 0.1);
+            border-left: 3px solid var(--success);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .timer-note {
+            background-color: rgba(255, 171, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .timer-note i {
+            color: var(--warning);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Стили для авторизации */
+        #login-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(43, 127, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .telegram-button-wrapper {
+            display: inline-block;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .telegram-button-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(43, 127, 255, 0.7);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        #access-denied-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .access-denied-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 82, 82, 0.5);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .access-denied-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .access-denied-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .access-denied-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .back-to-login-btn {
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-to-login-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        #logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .main-content {
+                padding-left: 0;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .step-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-content {
+                padding-left: 1rem;
+            }
+
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="login-section">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--text-primary);"></i>
+            </div>
+            <h1 class="login-title">Вхід у мануал техпідтримки</h1>
+            <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
+            <div class="telegram-button-wrapper">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="ticket_tracker_UG_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="login-footer">
+                Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран отказа в доступе -->
+    <div id="access-denied-section">
+        <div class="access-denied-content">
+            <div class="access-denied-icon">🚫</div>
+            <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
+            <p class="access-denied-message">
+                Ваш обліковий запис не має доступу до цієї системи.<br>
+                Будь ласка, зверніться до адміністратора для отримання додаткової інформації.
+            </p>
+            <button class="back-to-login-btn" onclick="logout()">Повернутися до входу</button>
+        </div>
+    </div>
+
+    <!-- Кнопка выхода -->
+    <button id="logout-btn" class="hidden">Вийти</button>
+
+    <!-- Бургер-меню -->
+    <div class="burger-menu hidden" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">GTA</div>
+            <div class="logo-text">Тех<span>Підтримка</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна</a></li>
+            <li><a href="solutions.html"><i class="fas fa-tools"></i> Вирішення проблем</a></li>
+            <li><a href="guide.html"><i class="fas fa-book"></i> Посібник</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="tickets.html" class="active"><i class="fas fa-ticket-alt"></i> Робота з тікетами</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content hidden" id="mainContent">
+        <div class="container">
+            <section class="page-header">
+                <h1>Мануал з роботи з тікетами</h1>
+                <p>Детальні інструкції для ефективної обробки тікетів</p>
+            </section>
+            
+            <section class="manual-container">
+                <div class="welcome-section">
+                    <h2>Вітаємо вас, шановний оператор!</h2>
+                    <p>Цей розділ присвячений важливій темі — як правильно та ефективно відповідати на тікети від гравців.</p>
+                </div>
+                
+                <div class="manual-section">
+                    <h2 class="section-title"><i class="fas fa-list-ol"></i> Хронологія обробки тікетів</h2>
+                    <p>У цьому розділі ми розглянемо чітку послідовність дій, яку повинен виконувати кожен адміністратор під час роботи з тікетами.</p>
+                    
+                    <div class="warning-note">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div><strong>Важливе правило:</strong> Прошу не спати на тікетах, за це будете отримувати покарання.</div>
+                    </div>
+                    
+                    <div class="step-container">
+                        <div class="step-title">
+                            <span class="step-number">1</span>
+                            <h3>Представлення</h3>
+                        </div>
+                        <div class="step-content">
+                            <p>Після прийняття тікету перше, що ви повинні зробити — представитись, щоб гравець одразу зрозумів, з ким веде діалог.</p>
+                            
+                            <div class="example-box">
+                                <div class="example-title">Приклад правильної відповіді:</div>
+                                <div class="response-box">
+                                    <p>Вітаю, мене звати Назар, чим я можу вам допомогти?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-container">
+                        <div class="step-title">
+                            <span class="step-number">2</span>
+                            <h3>Аналіз ситуації та відповідь по суті</h3>
+                        </div>
+                        <div class="step-content">
+                            <p>Ваша відповідь має виходити із ситуації, з якою звернувся гравець. Вона повинна бути чіткою, ввічливою та інформативною. Оператор не повинен порушувати правил, навіть якщо гравець просить про щось нестандартне.</p>
+                            
+                            <div class="example-box">
+                                <div class="example-title">Ситуація: Як мені почати грати на вашому сервері? Я не розумію нічого?</div>
+                                <div class="example-title">Правильна відповідь:</div>
+                                <div class="response-box">
+                                    <p>Вітаю, ознайомтесь з відео-інструкцією: <a href="https://youtu.be/2UpI-ObiwV4?si=F_gg0Jthv8JXFN8i" style="color: var(--accent-primary);">https://youtu.be/2UpI-ObiwV4?si=F_gg0Jthv8JXFN8i</a></p>
+                                    <p>Якщо вам буде щось незрозуміло, можемо перейти з вами у голосовий канал Discord UKRAINE GTA V, якщо у вас буде на це можливість.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-container">
+                        <div class="step-title">
+                            <span class="step-number">3</span>
+                            <h3>Перевірка наявності додаткових питань</h3>
+                        </div>
+                        <div class="step-content">
+                            <p>Після того як відповідь надана, обов'язково запитайте, чи залишились у гравця ще якісь запитання.</p>
+                            
+                            <div class="example-box">
+                                <div class="example-title">Форма запитання:</div>
+                                <div class="response-box">
+                                    <p>Я ще чимось можу Вам допомогти?</p>
+                                </div>
+                            </div>
+                            
+                            <p>Якщо гравець відповідає, що питань більше немає:</p>
+                            <div class="example-box">
+                                <div class="example-title">Завершення тікету:</div>
+                                <div class="response-box">
+                                    <p>Дякую за звернення. Цей тікет буде зачинено автоматично.</p>
+                                    <p>Якщо у вас виникнуть додаткові запитання, Ви завжди можете звернутись до нас ще.</p>
+                                </div>
+                            </div>
+                            
+                            <p>Якщо гравець не відповідає:</p>
+                            <div class="timer-note">
+                                <i class="fas fa-clock"></i>
+                                <div>Зачекайте 5 хвилин з моменту останнього повідомлення</div>
+                            </div>
+                            
+                            <div class="example-box">
+                                <div class="example-title">Приклад відповіді при відсутності реакції:</div>
+                                <div class="response-box">
+                                    <p>На жаль, від Вас зворотній зв'язок відсутній. Зачиняю даний тікет!</p>
+                                    <p>Дякую за звернення. Цей тікет буде зачинено автоматично.</p>
+                                    <p>Якщо у вас виникнуть додаткові запитання, Ви завжди можете звернутись до нас ще.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Технічна підтримка GTA 5 | Український сервер © 2023</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const SHEET_ID = '1fobxr4QwD8CLYFaTh2WXNbGwqQ2mWEuQDPkqDzvzkoU';
+        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+        const SHEET_NAME = 'Users_2025'; // Замените на имя вашей новой таблицы
+
+        // Функция для получения данных из Google Sheets
+        async function getSheetData(sheetName) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+                const res = await axios.get(url, { timeout: 10000 });
+                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+                return res.data.values || [];
+            } catch (error) {
+                console.error(`Помилка при отриманні даних з ${sheetName}:`, error);
+                return [];
+            }
+        }
+
+        // Обработка авторизации через Telegram
+        async function onTelegramAuth(user) {
+            console.log('Telegram auth triggered:', user);
+            if (!user || !user.username) {
+                console.error('Invalid user data:', user);
+                showAccessDenied();
+                return;
+            }
+
+            const telegramUsername = '@' + user.username;
+            console.log('Processing user:', telegramUsername);
+
+            try {
+                const usersData = await getSheetData(SHEET_NAME);
+                if (!usersData.length) {
+                    console.error('No users data found');
+                    showAccessDenied();
+                    return;
+                }
+
+                const headers = usersData[0];
+                const telegramColIndex = headers.indexOf('Telegram');
+
+                if (telegramColIndex === -1) {
+                    console.error('Telegram column not found in users data');
+                    showAccessDenied();
+                    return;
+                }
+
+                const userRow = usersData.find(row => 
+                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+                );
+
+                if (userRow) {
+                    console.log('User found in users data:', userRow);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('User not found in users data:', telegramUsername);
+                    localStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error('Помилка перевірки авторизації:', error);
+                showAccessDenied();
+            }
+        }
+
+        // Показать основной контент после авторизации
+        function showMainContent(nickname) {
+            console.log('Showing main content for:', nickname);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('burgerMenu').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = `Вітаємо, ${nickname}!`;
+        }
+
+        // Показать экран отказа в доступе
+        function showAccessDenied() {
+            console.log('Showing access denied section');
+            document.getElementById('access-denied-section').style.display = 'flex';
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+        }
+
+        // Показать форму входа
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = 'Мануал з роботи з тікетами';
+        }
+
+        // Выход из системы
+        function logout() {
+            console.log('Logging out');
+            localStorage.removeItem('tg_auth');
+            showLoginForm();
+        }
+
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('active');
+            
+            if (sidebar.classList.contains('active')) {
+                mainContent.style.paddingLeft = '320px';
+            } else {
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            const savedAuth = localStorage.getItem('tg_auth');
+            if (savedAuth) {
+                try {
+                    console.log('Found saved auth:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
+                    // Проверяем, существует ли пользователь в таблице
+                    getSheetData(SHEET_NAME).then(usersData => {
+                        if (!usersData.length) {
+                            console.error('No users data found');
+                            showAccessDenied();
+                            return;
+                        }
+                        const headers = usersData[0];
+                        const telegramColIndex = headers.indexOf('Telegram');
+                        if (telegramColIndex === -1) {
+                            console.error('Telegram column not found in users data');
+                            showAccessDenied();
+                            return;
+                        }
+                        const userExists = usersData.some(row => 
+                            row[telegramColIndex]?.trim().toLowerCase() === userData.username.toLowerCase()
+                        );
+                        if (userExists) {
+                            showMainContent(userData.nickname);
+                        } else {
+                            console.error('User not found in users data:', userData.username);
+                            localStorage.removeItem('tg_auth');
+                            showAccessDenied();
+                        }
+                    }).catch(error => {
+                        console.error('Помилка перевірки авторизації:', error);
+                        showAccessDenied();
+                    });
+                } catch (e) {
+                    console.error('Error parsing saved auth:', e);
+                    localStorage.removeItem('tg_auth');
+                    showLoginForm();
+                }
+            } else {
+                console.log('No saved auth, showing login form');
+                showLoginForm();
+            }
+        });
+    </script>
+</body>
+</html>
