@@ -503,6 +503,30 @@
             font-size: 0.9rem;
         }
 
+        .loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -666,6 +690,10 @@
     </div>
 
     <script>
+        // Конфігурація
+        const BOT_TOKEN = '8368134168:AAHaU1VQOUaeDSce9g7QLia0idbTVpDDHDM'; // Токен вашого бота
+        const SERVER_URL = 'https://script.google.com/macros/s/AKfycbwkzbBaaCD6AeBXvAgSaR-ikz4RMR35KpW2hZUd45jeCSDIS-v2ZrkKTqoEDcKjz3lV/exec'; // URL вашого Google Apps Script
+
         // Бургер-меню логіка
         document.getElementById('burgerMenu').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -688,68 +716,50 @@
             }
         });
 
-        // Налаштування Google Sheets API
-        const SHEET_ID = '1xYzAbCdEfGhIjKlMnOpQrStUvWx'; // Твій ID таблиці
-        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU'; // Твій API ключ
-
-        // Список дозволених адміністраторів
-        const allowedAdmins = ['@laker_78'];
-
-        // Отримання даних із Google Sheets
-        async function getSheetData(sheetName) {
+        // Перевірка авторизації користувача через сервер
+        async function validateUser(telegramData) {
             try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
-                console.log('Запит до Google Sheets:', url);
-                const res = await axios.get(url, { timeout: 10000 });
-                console.log(`Дані отримано для аркуша ${sheetName}:`, res.data.values);
-                return res.data.values || [];
-            } catch (error) {
-                console.error(`Помилка при отриманні даних з ${sheetName}:`, error.response?.data || error.message);
-                // Використовуємо тестові дані, якщо таблиця недоступна
-                return [
-                    ['username'],
-                    ['@test_user'],
-                    ['@laker_78'],
-                    ['@admin']
-                ];
-            }
-        }
-
-        // Перевірка авторизації користувача
-        async function validateUser(telegramUsername) {
-            console.log('Перевірка користувача:', telegramUsername);
-
-            // Перевірка в списку allowedAdmins
-            if (allowedAdmins.includes(telegramUsername)) {
-                console.log('Користувач є в allowedAdmins:', telegramUsername);
-                return true;
-            }
-
-            // Перевірка в Google Sheets
-            try {
-                console.log('Перевірка в Google Sheets:', telegramUsername);
-                const sheetData = await getSheetData('Sheet1');
-                if (!sheetData || !sheetData.length) {
-                    console.error('Дані таблиці не знайдено або таблиця порожня');
-                    return false;
-                }
-
-                const headers = sheetData[0];
-                const usernameColIndex = headers.indexOf('username');
-                if (usernameColIndex === -1) {
-                    console.error('Колонка "username" не знайдена. Наявні заголовки:', headers);
-                    return false;
-                }
-
-                // Перевіряємо всі рядки, крім заголовка
-                const userExists = sheetData.slice(1).some(row => {
-                    const username = row[usernameColIndex]?.trim();
-                    return username && username.toLowerCase() === telegramUsername.toLowerCase();
+                showLoading(true);
+                
+                // Валідація даних від Telegram
+                const checkHash = telegramData.hash;
+                delete telegramData.hash;
+                
+                // Підготовка даних для перевірки
+                let dataCheckString = '';
+                Object.keys(telegramData)
+                    .sort()
+                    .forEach(key => {
+                        dataCheckString += `${key}=${telegramData[key]}\n`;
+                    });
+                
+                dataCheckString = dataCheckString.slice(0, -1);
+                
+                // Валідація хеша (цей крок повинен виконуватись на сервері для безпеки)
+                // Для простоти робимо запит до сервера
+                const response = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'validateUser',
+                        telegramData: telegramData,
+                        hash: checkHash
+                    })
                 });
-
-                console.log('Результат перевірки в таблиці:', userExists);
-                return userExists;
+                
+                const result = await response.json();
+                showLoading(false);
+                
+                if (result.success) {
+                    return result.isValid;
+                } else {
+                    console.error('Помилка перевірки авторизації:', result.error);
+                    return false;
+                }
             } catch (error) {
+                showLoading(false);
                 console.error('Помилка перевірки авторизації:', error);
                 return false;
             }
@@ -765,21 +775,27 @@
                 return;
             }
 
-            const telegramUsername = '@' + user.username;
-            const isValidUser = await validateUser(telegramUsername);
-
-            if (isValidUser) {
+            // Додаємо @ до username, якщо його немає
+            const telegramUsername = user.username.startsWith('@') ? user.username : '@' + user.username;
+            
+            // Перевіряємо автентичність даних
+            const isValid = await validateUser(user);
+            
+            if (isValid) {
                 console.log('Користувач авторизований:', telegramUsername);
                 const userData = {
                     username: telegramUsername,
-                    nickname: user.first_name || user.username
+                    nickname: user.first_name || user.username,
+                    id: user.id
                 };
                 localStorage.setItem('tg_auth', JSON.stringify(userData));
+                sessionStorage.setItem('tg_auth', JSON.stringify(userData));
                 showMainContent(userData.nickname);
             } else {
                 console.error('Користувача не знайдено:', telegramUsername);
                 alert('Доступ заборонено: Ваш username не знайдено в системі.');
                 localStorage.removeItem('tg_auth');
+                sessionStorage.removeItem('tg_auth');
                 showAccessDenied();
             }
         }
@@ -788,7 +804,7 @@
         async function manualLogin() {
             const usernameInput = document.getElementById('usernameInput');
             const errorElement = document.getElementById('manualLoginError');
-            const username = usernameInput.value.trim();
+            let username = usernameInput.value.trim();
             
             if (!username) {
                 errorElement.textContent = 'Будь ласка, введіть username';
@@ -797,26 +813,46 @@
             }
             
             if (!username.startsWith('@')) {
-                errorElement.textContent = 'Username повинен починатися з @';
-                errorElement.classList.remove('hidden');
-                return;
+                username = '@' + username;
             }
             
             errorElement.classList.add('hidden');
             
-            const isValidUser = await validateUser(username);
-            
-            if (isValidUser) {
-                console.log('Користувач авторизований через ручний вхід:', username);
-                const userData = {
-                    username: username,
-                    nickname: username
-                };
-                localStorage.setItem('tg_auth', JSON.stringify(userData));
-                showMainContent(userData.nickname);
-            } else {
-                errorElement.textContent = 'Доступ заборонено: Ваш username не знайдено в системі.';
+            // Перевіряємо користувача на сервері
+            try {
+                showLoading(true);
+                const response = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'validateUser',
+                        telegramUsername: username
+                    })
+                });
+                
+                const result = await response.json();
+                showLoading(false);
+                
+                if (result.success && result.isValid) {
+                    console.log('Користувач авторизований через ручний вхід:', username);
+                    const userData = {
+                        username: username,
+                        nickname: username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    sessionStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    errorElement.textContent = 'Доступ заборонено: Ваш username не знайдено в системі.';
+                    errorElement.classList.remove('hidden');
+                }
+            } catch (error) {
+                showLoading(false);
+                errorElement.textContent = 'Помилка підключення до сервера. Спробуйте пізніше.';
                 errorElement.classList.remove('hidden');
+                console.error('Помилка ручного входу:', error);
             }
         }
 
@@ -872,7 +908,22 @@
         function logout() {
             console.log('Вихід із системи');
             localStorage.removeItem('tg_auth');
+            sessionStorage.removeItem('tg_auth');
             showLoginForm();
+        }
+
+        // Показати/приховати індикатор завантаження
+        function showLoading(show) {
+            const loginContainer = document.querySelector('.login-container');
+            const buttons = document.querySelectorAll('button');
+            
+            if (show) {
+                loginContainer.classList.add('loading');
+                buttons.forEach(btn => btn.disabled = true);
+            } else {
+                loginContainer.classList.remove('loading');
+                buttons.forEach(btn => btn.disabled = false);
+            }
         }
 
         // Перевірка завантаження Telegram Widget
@@ -894,26 +945,49 @@
             // Перевіряємо чи завантажився Telegram Widget
             checkTelegramWidget();
 
+            // Перевіряємо чи є збережена авторизація
             const savedAuth = localStorage.getItem('tg_auth');
-            if (savedAuth) {
+            const sessionAuth = sessionStorage.getItem('tg_auth');
+            
+            // Віддаємо перевагу сесії, якщо вона є
+            const authData = sessionAuth || savedAuth;
+            
+            if (authData) {
                 try {
-                    console.log('Знайдено збережену авторизацію:', savedAuth);
-                    const userData = JSON.parse(savedAuth);
+                    console.log('Знайдено збережену авторизацію:', authData);
+                    const userData = JSON.parse(authData);
                     const telegramUsername = userData.username;
 
-                    // Повторна перевірка авторизації через Google Sheets
-                    const isValidUser = await validateUser(telegramUsername);
-                    if (isValidUser) {
+                    // Перевіряємо на сервері чи дійсний still користувач
+                    showLoading(true);
+                    const response = await fetch(SERVER_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'validateUser',
+                            telegramUsername: telegramUsername
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    showLoading(false);
+                    
+                    if (result.success && result.isValid) {
                         console.log('Збережена авторизація валідна:', telegramUsername);
                         showMainContent(userData.nickname);
                     } else {
                         console.error('Збережена авторизація невалідна:', telegramUsername);
                         localStorage.removeItem('tg_auth');
+                        sessionStorage.removeItem('tg_auth');
                         showLoginForm();
                     }
                 } catch (e) {
-                    console.error('Помилка парсингу збереженої авторизації:', e);
+                    showLoading(false);
+                    console.error('Помилка перевірки збереженої авторизації:', e);
                     localStorage.removeItem('tg_auth');
+                    sessionStorage.removeItem('tg_auth');
                     showLoginForm();
                 }
             } else {
