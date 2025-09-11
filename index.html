@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
+        /* Стили остаются без изменений */
         :root {
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
@@ -716,57 +717,48 @@
             }
         });
 
+        // Функція для виконання JSONP запитів
+        function jsonpRequest(url, callback) {
+            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                callback(data);
+            };
+
+            const script = document.createElement('script');
+            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+            document.body.appendChild(script);
+        }
+
         // Перевірка авторизації користувача через сервер
-        async function validateUser(telegramData) {
+        function validateUser(telegramUsername, callback) {
             try {
                 showLoading(true);
                 
-                // Валідація даних від Telegram
-                const checkHash = telegramData.hash;
-                delete telegramData.hash;
+                // Використовуємо JSONP для обходу CORS
+                const encodedUsername = encodeURIComponent(telegramUsername);
+                const url = `${SERVER_URL}?action=validateUser&telegramUsername=${encodedUsername}&format=jsonp`;
                 
-                // Підготовка даних для перевірки
-                let dataCheckString = '';
-                Object.keys(telegramData)
-                    .sort()
-                    .forEach(key => {
-                        dataCheckString += `${key}=${telegramData[key]}\n`;
-                    });
-                
-                dataCheckString = dataCheckString.slice(0, -1);
-                
-                // Валідація хеша (цей крок повинен виконуватись на сервері для безпеки)
-                // Для простоти робимо запит до сервера
-                const response = await fetch(SERVER_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'validateUser',
-                        telegramData: telegramData,
-                        hash: checkHash
-                    })
+                jsonpRequest(url, function(result) {
+                    showLoading(false);
+                    
+                    if (result.success) {
+                        callback(result.isValid);
+                    } else {
+                        console.error('Помилка перевірки авторизації:', result.error);
+                        callback(false);
+                    }
                 });
-                
-                const result = await response.json();
-                showLoading(false);
-                
-                if (result.success) {
-                    return result.isValid;
-                } else {
-                    console.error('Помилка перевірки авторизації:', result.error);
-                    return false;
-                }
             } catch (error) {
                 showLoading(false);
                 console.error('Помилка перевірки авторизації:', error);
-                return false;
+                callback(false);
             }
         }
 
         // Функція авторизації через Telegram
-        async function onTelegramAuth(user) {
+        function onTelegramAuth(user) {
             console.log('Telegram auth triggered:', user);
             if (!user || !user.username) {
                 console.error('Помилка: Username invalid або відсутній', user);
@@ -779,29 +771,29 @@
             const telegramUsername = user.username.startsWith('@') ? user.username : '@' + user.username;
             
             // Перевіряємо автентичність даних
-            const isValid = await validateUser(user);
-            
-            if (isValid) {
-                console.log('Користувач авторизований:', telegramUsername);
-                const userData = {
-                    username: telegramUsername,
-                    nickname: user.first_name || user.username,
-                    id: user.id
-                };
-                localStorage.setItem('tg_auth', JSON.stringify(userData));
-                sessionStorage.setItem('tg_auth', JSON.stringify(userData));
-                showMainContent(userData.nickname);
-            } else {
-                console.error('Користувача не знайдено:', telegramUsername);
-                alert('Доступ заборонено: Ваш username не знайдено в системі.');
-                localStorage.removeItem('tg_auth');
-                sessionStorage.removeItem('tg_auth');
-                showAccessDenied();
-            }
+            validateUser(telegramUsername, function(isValid) {
+                if (isValid) {
+                    console.log('Користувач авторизований:', telegramUsername);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username,
+                        id: user.id
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    sessionStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('Користувача не знайдено:', telegramUsername);
+                    alert('Доступ заборонено: Ваш username не знайдено в системі.');
+                    localStorage.removeItem('tg_auth');
+                    sessionStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            });
         }
 
         // Альтернативний вхід вручну
-        async function manualLogin() {
+        function manualLogin() {
             const usernameInput = document.getElementById('usernameInput');
             const errorElement = document.getElementById('manualLoginError');
             let username = usernameInput.value.trim();
@@ -819,23 +811,8 @@
             errorElement.classList.add('hidden');
             
             // Перевіряємо користувача на сервері
-            try {
-                showLoading(true);
-                const response = await fetch(SERVER_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'validateUser',
-                        telegramUsername: username
-                    })
-                });
-                
-                const result = await response.json();
-                showLoading(false);
-                
-                if (result.success && result.isValid) {
+            validateUser(username, function(isValid) {
+                if (isValid) {
                     console.log('Користувач авторизований через ручний вхід:', username);
                     const userData = {
                         username: username,
@@ -848,12 +825,7 @@
                     errorElement.textContent = 'Доступ заборонено: Ваш username не знайдено в системі.';
                     errorElement.classList.remove('hidden');
                 }
-            } catch (error) {
-                showLoading(false);
-                errorElement.textContent = 'Помилка підключення до сервера. Спробуйте пізніше.';
-                errorElement.classList.remove('hidden');
-                console.error('Помилка ручного входу:', error);
-            }
+            });
         }
 
         // Перемикач ручного входу
@@ -938,7 +910,7 @@
         }
 
         // Ініціалізація
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM завантажено');
             document.getElementById('logout-btn').addEventListener('click', logout);
             
@@ -960,29 +932,19 @@
 
                     // Перевіряємо на сервері чи дійсний still користувач
                     showLoading(true);
-                    const response = await fetch(SERVER_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            action: 'validateUser',
-                            telegramUsername: telegramUsername
-                        })
+                    validateUser(telegramUsername, function(isValid) {
+                        showLoading(false);
+                        
+                        if (isValid) {
+                            console.log('Збережена авторизація валідна:', telegramUsername);
+                            showMainContent(userData.nickname);
+                        } else {
+                            console.error('Збережена авторизація невалідна:', telegramUsername);
+                            localStorage.removeItem('tg_auth');
+                            sessionStorage.removeItem('tg_auth');
+                            showLoginForm();
+                        }
                     });
-                    
-                    const result = await response.json();
-                    showLoading(false);
-                    
-                    if (result.success && result.isValid) {
-                        console.log('Збережена авторизація валідна:', telegramUsername);
-                        showMainContent(userData.nickname);
-                    } else {
-                        console.error('Збережена авторизація невалідна:', telegramUsername);
-                        localStorage.removeItem('tg_auth');
-                        sessionStorage.removeItem('tg_auth');
-                        showLoginForm();
-                    }
                 } catch (e) {
                     showLoading(false);
                     console.error('Помилка перевірки збереженої авторизації:', e);
