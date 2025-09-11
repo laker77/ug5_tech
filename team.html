@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Команда проєкту | Техпідтримка GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #1d1d1d;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding-left: 2rem;
+            transition: var(--transition);
+        }
+
+        .page-header {
+            padding: 6rem 0 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .team-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .department-section {
+            margin-bottom: 3rem;
+        }
+
+        .department-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .department-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .department-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .member-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-info {
+            flex-grow: 1;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .member-role {
+            color: var(--accent-primary);
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .member-contact {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .card-content {
+            margin-top: 1rem;
+        }
+
+        .responsibilities {
+            margin-bottom: 1.5rem;
+        }
+
+        .responsibilities-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .responsibilities ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .responsibilities li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .rights {
+            background-color: rgba(255, 171, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1.5rem;
+        }
+
+        .rights-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        .important-note {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 3px solid var(--danger);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .important-note-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--danger);
+        }
+
+        /* Стили для авторизации */
+        #login-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(43, 127, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .telegram-button-wrapper {
+            display: inline-block;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .telegram-button-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(43, 127, 255, 0.7);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        #access-denied-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0d0d1a 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .access-denied-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 82, 82, 0.5);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .access-denied-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .access-denied-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .access-denied-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .back-to-login-btn {
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-to-login-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        #logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .main-content {
+                padding-left: 0;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .department-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="login-section">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--text-primary);"></i>
+            </div>
+            <h1 class="login-title">Вхід у розділ команди</h1>
+            <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
+            <div class="telegram-button-wrapper">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="ticket_tracker_UG_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="login-footer">
+                Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран отказа в доступе -->
+    <div id="access-denied-section">
+        <div class="access-denied-content">
+            <div class="access-denied-icon">🚫</div>
+            <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
+            <p class="access-denied-message">
+                Ваш обліковий запис не має доступу до цієї системи.<br>
+                Будь ласка, зверніться до адміністратора для отримання додаткової інформації.
+            </p>
+            <button class="back-to-login-btn" onclick="logout()">Повернутися до входу</button>
+        </div>
+    </div>
+
+    <!-- Кнопка выхода -->
+    <button id="logout-btn" class="hidden">Вийти</button>
+
+    <!-- Бургер-меню -->
+    <div class="burger-menu hidden" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">GTA</div>
+            <div class="logo-text">Тех<span>Підтримка</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна</a></li>
+            <li><a href="solutions.html"><i class="fas fa-tools"></i> Вирішення проблем</a></li>
+            <li><a href="guide.html"><i class="fas fa-book"></i> Посібник</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Робота з тікетами</a></li>
+            <li><a href="team.html" class="active"><i class="fas fa-users"></i> Команда проєкту</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content hidden" id="mainContent">
+        <div class="container">
+            <section class="page-header">
+                <h1>Команда проєкту Ukraine GTA 5</h1>
+                <p>Знайомтеся з нашою командою, яка знаходиться в офіційному чаті Адміністраторів. Тут ви можете ознайомитися з яким питанням і до кого ви можете звернутися у разі, якщо у вас виникнуть питання.</p>
+            </section>
+            
+            <section class="team-container">
+                <!-- Власник проєкту -->
+                <div class="department-section">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h2 class="department-title">Власник проєкту</h2>
+                    </div>
+                    
+                    <div class="members-grid">
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/EONAGzX.jpg" alt="@devgta_ua">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@devgta_ua</div>
+                                    <div class="member-role">Власник проєкту</div>
+                                    <div class="member-contact">dev</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Особовий статус</span>
+                                    </div>
+                                    <div class="important-note">
+                                        <div class="important-note-title">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span>Зверніть увагу:</span>
+                                        </div>
+                                        <p>Зв'язуватись із цією особою дозволено лише у виняткових випадках, коли мають місце серйозні порушення з боку Керівника Проєкту, які неможливо вирішити самостійно.</p>
+                                    </div>
+                                    
+                                    <p>Зокрема, йдеться про випадки:</p>
+                                    <ul>
+                                        <li>грубий блат або упередженість при ухваленні рішень</li>
+                                        <li>неетична поведінка, образи, приниження чи інші порушення норм професійної етики</li>
+                                        <li>перевищення службових повноважень або зловживання роллю</li>
+                                    </ul>
+                                    
+                                    <p>Також дозволяється зробити тег цієї особи в робочій групі, якщо:</p>
+                                    <ul>
+                                        <li>сталася критична технічна проблема (наприклад, не працює сервер)</li>
+                                        <li>жоден учасник із відповідального списку не відповів протягом 10–15 хвилин після повідомлення про проблему</li>
+                                    </ul>
+                                    
+                                    <div class="important-note">
+                                        <div class="important-note-title">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span>Важливо:</span>
+                                        </div>
+                                        <p>Теги й звернення можливі виключно за відсутності реакції інших членів команди у вказаний термін.</p>
+                                        <p>Просимо з повагою ставитись до часу та навантаження цієї особи, і використовувати контакт лише за реальної необхідності.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Технічний відділ -->
+                <div class="department-section">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h2 class="department-title">Технічний відділ</h2>
+                    </div>
+                    
+                    <div class="members-grid">
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/HOFIjOF.jpg" alt="@teh_ugta">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@teh_ugta</div>
+                                    <div class="member-role">Технічний адміністратор</div>
+                                    <div class="member-contact">Максим</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Відповідає за:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Роботу форуму</li>
+                                        <li>Відновлення майна</li>
+                                        <li>Розгляд технічних проблем</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/lkMXTmr.jpg" alt="@Bloomberger_01">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@Bloomberger_01</div>
+                                    <div class="member-role">Керівник технічної підтримки</div>
+                                    <div class="member-contact">Мстислав Подільський</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Відповідає за:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Модерацію Discord сервера</li>
+                                        <li>Телеграм-бота підтримки</li>
+                                        <li>Команду модераторів та тех.підтримки</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Тестування -->
+                <div class="department-section">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <i class="fas fa-vial"></i>
+                        </div>
+                        <h2 class="department-title">Тестування</h2>
+                    </div>
+                    
+                    <div class="members-grid">
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/kjk7lQ9.jpg" alt="@no1szeeq">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@no1szeeq</div>
+                                    <div class="member-role">Головний тестер Ukraine GTA 5</div>
+                                    <div class="member-contact">Max</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Відповідає за:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Перевірку багів на сервері</li>
+                                        <li>Куратор команди тестерів</li>
+                                    </ul>
+                                </div>
+                                <div class="rights">
+                                    <div class="rights-title">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Важливо</span>
+                                    </div>
+                                    <p>Якщо ви знайшли баг — тегайте в адмін-групі, додавайте відео/скріншоти та повний опис багу.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/d2muOHx.jpg" alt="@test_uagta">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@test_uagta</div>
+                                    <div class="member-role">Головний тестер по MTA</div>
+                                    <div class="member-contact">Міша</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Має право:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Писати в адмін-групу</li>
+                                        <li>Уточнювати інформацію щодо багів та дій адміністрації</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Медіа та Реклама -->
+                <div class="department-section">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <h2 class="department-title">Медіа та Реклама</h2>
+                    </div>
+                    
+                    <div class="members-grid">
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/HOFIjOF.jpg" alt="@digital_ug">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@digital_ug</div>
+                                    <div class="member-role">Діджітал Редактор</div>
+                                    <div class="member-contact">Саша</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Відповідає за:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Блогерів та стрімерів</li>
+                                        <li>Реєстрацію нових медіа</li>
+                                    </ul>
+                                </div>
+                                <div class="rights">
+                                    <div class="rights-title">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Важливо</span>
+                                    </div>
+                                    <p>Гравці, які хочуть стати Медіа, ви повинні взяти їх контактні данні, після чого запросити інформацію, а саме канал, соц.мережі та передати Саші особисто.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Керівництво проєкту -->
+                <div class="department-section">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <i class="fas fa-chess-king"></i>
+                        </div>
+                        <h2 class="department-title">Керівництво проєкту</h2>
+                    </div>
+                    
+                    <div class="members-grid">
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/L0Mh1gv.jpg" alt="@noxx_uagtaV">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@noxx_uagtaV</div>
+                                    <div class="member-role">Керівник проєкту Ukraine GTA 5</div>
+                                    <div class="member-contact">Noxx</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Відповідає за:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Загальне управління проєктом</li>
+                                        <li>Організаційні питання</li>
+                                    </ul>
+                                </div>
+                                <div class="rights">
+                                    <div class="rights-title">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Важливо</span>
+                                    </div>
+                                    <p>Ви звертаєтесь до керівника проєкта, виключно коли вашу проблему або запитання не зміг вирішити Заступник Головного Адміністратора.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="member-card">
+                            <div class="card-header">
+                                <div class="avatar">
+                                    <img src="https://i.imgur.com/cIz5nKH.jpg" alt="@zhdanovrostyslav">
+                                </div>
+                                <div class="member-info">
+                                    <div class="member-name">@zhdanovrostyslav</div>
+                                    <div class="member-role">Заступник Головного Адміністратора</div>
+                                    <div class="member-contact">Azzazelo</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="responsibilities">
+                                    <div class="responsibilities-title">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Вирішує:</span>
+                                    </div>
+                                    <ul>
+                                        <li>Організаційні питання в команді адміністрації</li>
+                                        <li>Складні ситуації, які не можуть вирішити куратори</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Технічна підтримка GTA 5 | Український сервер © 2023</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
+        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+        const SHEET_NAME = 'Users'; // Замените на точное имя таблицы
+
+        // Функция для получения данных из Google Sheets
+        async function getSheetData(sheetName) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+                console.log('Fetching data from:', url);
+                const res = await axios.get(url, { timeout: 10000 });
+                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+                return res.data.values || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
+                return [];
+            }
+        }
+
+        // Обработка авторизации через Telegram
+        async function onTelegramAuth(user) {
+            console.log('Telegram auth triggered:', user);
+            if (!user || !user.username) {
+                console.error('Invalid user data:', user);
+                showAccessDenied();
+                return;
+            }
+
+            const telegramUsername = '@' + user.username;
+            console.log('Processing user:', telegramUsername);
+
+            try {
+                const usersData = await getSheetData(SHEET_NAME);
+                if (!usersData.length) {
+                    console.error('No users data found in sheet:', SHEET_NAME);
+                    showAccessDenied();
+                    return;
+                }
+
+                const headers = usersData[0];
+                console.log('Sheet headers:', headers);
+                const telegramColIndex = headers.indexOf('Telegram');
+
+                if (telegramColIndex === -1) {
+                    console.error('Telegram column not found in headers:', headers);
+                    showAccessDenied();
+                    return;
+                }
+
+                const userRow = usersData.find(row => 
+                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+                );
+
+                if (userRow) {
+                    console.log('User found in users data:', userRow);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('User not found in users data:', telegramUsername);
+                    localStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error('Error during authorization check:', error.message, error.response?.data);
+                showAccessDenied();
+            }
+        }
+
+        // Показать основной контент после авторизации
+        function showMainContent(nickname) {
+            console.log('Showing main content for:', nickname);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('burgerMenu').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = `Вітаємо, ${nickname}!`;
+        }
+
+        // Показать экран отказа в доступе
+        function showAccessDenied() {
+            console.log('Showing access denied section');
+            document.getElementById('access-denied-section').style.display = 'flex';
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+        }
+
+        // Показать форму входа
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').style.display = 'none';
+            document.querySelector('.page-header h1').innerText = 'Команда проєкту Ukraine GTA 5';
+        }
+
+        // Выход из системы
+        function logout() {
+            console.log('Logging out');
+            localStorage.removeItem('tg_auth');
+            showLoginForm();
+        }
+
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('active');
+            
+            if (sidebar.classList.contains('active')) {
+                mainContent.style.paddingLeft = '320px';
+            } else {
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.style.paddingLeft = '2rem';
+            }
+        });
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            const savedAuth = localStorage.getItem('tg_auth');
+            if (savedAuth) {
+                try {
+                    console.log('Found saved auth:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
+                    console.log('Checking user in sheet:', userData.username);
+                    // Проверяем, существует ли пользователь в таблице
+                    getSheetData(SHEET_NAME).then(usersData => {
+                        if (!usersData.length) {
+                            console.error('No users data found in sheet:', SHEET_NAME);
+                            showAccessDenied();
+                            return;
+                        }
+                        const headers = usersData[0];
+                        console.log('Sheet headers:', headers);
+                        const telegramColIndex = headers.indexOf('Telegram');
+                        if (telegramColIndex === -1) {
+                            console.error('Telegram column not found in headers:', headers);
+                            showAccessDenied();
+                            return;
+                        }
+                        const userExists = usersData.some(row => 
+                            row[telegramColIndex]?.trim().toLowerCase() === userData.username.toLowerCase()
+                        );
+                        if (userExists) {
+                            console.log('User verified:', userData.username);
+                            showMainContent(userData.nickname);
+                        } else {
+                            console.error('User not found in users data:', userData.username);
+                            localStorage.removeItem('tg_auth');
+                            showAccessDenied();
+                        }
+                    }).catch(error => {
+                        console.error('Error during authorization check:', error.message, error.response?.data);
+                        showAccessDenied();
+                    });
+                } catch (e) {
+                    console.error('Error parsing saved auth:', e);
+                    localStorage.removeItem('tg_auth');
+                    showLoginForm();
+                }
+            } else {
+                console.log('No saved auth, showing login form');
+                showLoginForm();
+            }
+        });
+    </script>
+</body>
+</html>
