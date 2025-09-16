@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Особовий склад | Ukraine GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1d2229;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --accent-green: #00d26a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(43, 127, 255, 0.5);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Специфические стили для модерации */
+        .moderation-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* Стили для карточек сотрудников */
+        .staff-container {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .staff-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .staff-intro h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .staff-intro p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .staff-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .staff-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .staff-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .staff-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .staff-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .staff-avatar::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+        }
+
+        .staff-name {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .staff-role {
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .staff-stats {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 1.5rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-online {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 210, 106, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 210, 106, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 210, 106, 0);
+            }
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .staff-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .staff-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Бургер-меню -->
+    <div class="burger-menu" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">UG</div>
+            <div class="logo-text">Ukraine <span>GTA5</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
+            <li><a href="statute.html"><i class="fas fa-book"></i> Статут та регламент</a></li>
+            <li><a href="schedule.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
+            <li><a href="warnings.html"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
+            <li><a href="inactive.html"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
+            <li><a href="staff.html" class="active"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
+            <li><a href="commands.html"><i class="fas fa-terminal"></i> Команди</a></li>
+            <li><a href="factions.html"><i class="fas fa-building"></i> Фракції</a></li>
+            <li><a href="info.html"><i class="fas fa-info-circle"></i> Info D.M</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="additional.html"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <section class="hero">
+                <h1 class="animated">Особовий склад <span class="moderation-badge">Ukraine GTA5</span></h1>
+                <p class="animated delay-1">Нижче наведено список активного особового складу модераторів сервера UKRAINE GTA V, які забезпечують дотримання правил та підтримку спільноти.</p>
+            </section>
+            
+            <div class="staff-container">
+                <div class="staff-intro">
+                    <h2>Наша команда модераторів</h2>
+                    <p>Ці професіонали забезпечують стабільну роботу сервера, дотримання правил гри та створення приємної атмосфери для всіх гравців.</p>
+                </div>
+                
+                <div class="staff-grid">
+                    <!-- Сотрудник 1 -->
+                    <div class="staff-card animated delay-1">
+                        <div class="staff-avatar">VN</div>
+                        <h3 class="staff-name">Vova Nolan <span class="status-online"></span></h3>
+                        <p class="staff-role">Головний модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">98%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">256</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 2 -->
+                    <div class="staff-card animated delay-2">
+                        <div class="staff-avatar">JM</div>
+                        <h3 class="staff-name">Jonathan Maccalister <span class="status-online"></span></h3>
+                        <p class="staff-role">Старший модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">95%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">231</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 3 -->
+                    <div class="staff-card animated delay-3">
+                        <div class="staff-avatar">AC</div>
+                        <h3 class="staff-name">Alisha Clark <span class="status-online"></span></h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">92%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">187</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 4 -->
+                    <div class="staff-card animated delay-1">
+                        <div class="staff-avatar">TM</div>
+                        <h3 class="staff-name">Tessa Maccalister <span class="status-online"></span></h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">90%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">175</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 5 -->
+                    <div class="staff-card animated delay-2">
+                        <div class="staff-avatar">KM</div>
+                        <h3 class="staff-name">Kevin Maccalister</h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">88%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">162</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 6 -->
+                    <div class="staff-card animated delay-3">
+                        <div class="staff-avatar">MC</div>
+                        <h3 class="staff-name">Mashyla Clark <span class="status-online"></span></h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">87%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">154</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 7 -->
+                    <div class="staff-card animated delay-1">
+                        <div class="staff-avatar">OS</div>
+                        <h3 class="staff-name">Oleksiy Stalker</h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">142</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 8 -->
+                    <div class="staff-card animated delay-2">
+                        <div class="staff-avatar">TR</div>
+                        <h3 class="staff-name">Tyrell Reiss <span class="status-online"></span></h3>
+                        <p class="staff-role">Модератор</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">84%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">138</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 9 -->
+                    <div class="staff-card animated delay-3">
+                        <div class="staff-avatar">AV</div>
+                        <h3 class="staff-name">Alan Viego</h3>
+                        <p class="staff-role">Помічник модератора</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">82%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">126</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сотрудник 10 -->
+                    <div class="staff-card animated delay-1">
+                        <div class="staff-avatar">MM</div>
+                        <h3 class="staff-name">Mackenzie Maccalister <span class="status-online"></span></h3>
+                        <p class="staff-role">Помічник модератора</p>
+                        <div class="staff-stats">
+                            <div class="stat">
+                                <div class="stat-value">80%</div>
+                                <div class="stat-label">Активність</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">118</div>
+                                <div class="stat-label">Зміни</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Ukraine GTA 5 Moderation System © 2023. Всі права захищені.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Анимация элементов при прокрутке
+        const animatedElements = document.querySelectorAll('.animated');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.visibility = 'visible';
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => {
+            el.style.visibility = 'hidden';
+            observer.observe(el);
+        });
+
+        // Показать активную страницу в меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuLinks = document.querySelectorAll('.nav-menu a');
+            
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
