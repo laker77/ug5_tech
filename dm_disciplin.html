@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Доган/Попереджень/Штрафів | Ukraine GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1d2229;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --accent-green: #00d26a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(43, 127, 255, 0.5);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .features {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Статистика */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 3rem 0;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Специфические стили для модерации */
+        .moderation-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* Стили для контента системи штрафів */
+        .penalty-content {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .penalty-section {
+            margin-bottom: 3rem;
+        }
+
+        .penalty-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .penalty-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            border-bottom: 2px solid var(--accent-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .penalty-section h3 {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent-secondary);
+        }
+
+        .penalty-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .penalty-section ul, .penalty-section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .penalty-section li {
+            margin-bottom: 0.7rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .important-note {
+            background: rgba(255, 173, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .danger-note {
+            background: rgba(255, 82, 82, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .success-note {
+            background: rgba(0, 200, 83, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .penalty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .penalty-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .penalty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .penalty-card h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .penalty-card ul {
+            margin: 0;
+        }
+
+        .penalty-card li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .penalty-card li:before {
+            content: '•';
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .penalty-content {
+                padding: 1.5rem;
+            }
+
+            .penalty-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Бургер-меню -->
+    <div class="burger-menu" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">UG</div>
+            <div class="logo-text">Ukraine <span>GTA5</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
+            <li><a href="statute.html"><i class="fas fa-book"></i> Статут та регламент</a></li>
+            <li><a href="schedule.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
+            <li><a href="warnings.html" class="active"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
+            <li><a href="inactive.html"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
+            <li><a href="staff.html"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
+            <li><a href="commands.html"><i class="fas fa-terminal"></i> Команди</a></li>
+            <li><a href="factions.html"><i class="fas fa-building"></i> Фракції</a></li>
+            <li><a href="info.html"><i class="fas fa-info-circle"></i> Info D.M</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="additional.html"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <section class="hero">
+                <h1 class="animated">Система Доган/Попереджень/Штрафів <span class="moderation-badge">Ukraine GTA5</span></h1>
+                <p class="animated delay-1">Інформація про систему стягнення та умови їх зняття. Дотримуйтесь правил, щоб уникнути санкцій.</p>
+            </section>
+            
+            <div class="penalty-content">
+                <div class="penalty-section">
+                    <h2>Загальна інформація</h2>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-info-circle"></i> На нашому сервері присутня система доган/попереджень/-5%! Щоб зняти Догану/Попередження/-5%, вам потрібно виконати наступну роботу:</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-exclamation-circle"></i> P.S. Термін дії всіх доказів становить 7 днів.</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-ban"></i> 2/2 доган = Зняття з посади</p>
+                    </div>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-exclamation-triangle"></i> 3/3 попереджень = Догана</p>
+                    </div>
+                </div>
+
+                <div class="penalty-section">
+                    <h2>Умови зняття стягнень</h2>
+                    
+                    <div class="penalty-grid">
+                        <div class="penalty-card animated delay-1">
+                            <h3><i class="fas fa-ban"></i> Зняти догану</h3>
+                            <ul>
+                                <li>Відповісти на 30 запитань в каналі "Питання до модерації діскорду"</li>
+                                <li>Видати покарання 40 разів (у каналі "🚫докази про покарання")</li>
+                                <li>На протязі 7-ох днів робити онлайн зміни по 3:00 год.</li>
+                                <li>Видати 10 попереджень в каналі "🚫Попередження"</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="penalty-card animated delay-2">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Зняти попередження</h3>
+                            <ul>
+                                <li>Відповісти на 15 запитань в каналі "Питання до модерації діскорду"</li>
+                                <li>Видати покарання 30 разів (у каналі "🚫докази про покарання")</li>
+                                <li>На протязі 4-ох днів робити онлайн зміни по 2:30 год.</li>
+                                <li>Видати 7 попереджень в каналі "🚫Попередження"</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="penalty-card animated delay-3">
+                            <h3><i class="fas fa-money-bill-wave"></i> Зняти -5%</h3>
+                            <ul>
+                                <li>Відповісти на 5 запитань в каналі "Питання до модерації діскорду"</li>
+                                <li>Видати покарання 10 разів (у каналі "🚫докази про покарання")</li>
+                                <li>На протязі 2-ох днів робити онлайн зміни по 2 год.</li>
+                                <li>Видати 4 попереджень в каналі "🚫Попередження"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="penalty-section">
+                    <h2>Важливі зауваження</h2>
+                    
+                    <div class="success-note">
+                        <p><i class="fas fa-lightbulb"></i> Всі виконані завдання мають бути задокументовані та підтверджені доказами.</p>
+                    </div>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-clock"></i> Докази мають термін дії - 7 днів з моменту їх надання.</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-times-circle"></i> Невиконання умов для зняття стягнення призводить до його накопичення та можливого звільнення.</p>
+                    </div>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-headset"></i> У разі виникнення питань звертайтеся до Тім Лідера або старшого модератора.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Ukraine GTA 5 Moderation System © 2023. Всі права захищені.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Анимация элементов при прокрутке
+        const animatedElements = document.querySelectorAll('.animated');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.visibility = 'visible';
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => {
+            el.style.visibility = 'hidden';
+            observer.observe(el);
+        });
+
+        // Показать активную страницу в меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuLinks = document.querySelectorAll('.nav-menu a');
+            
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
