@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статут та регламент | Ukraine GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1d2229;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --accent-green: #00d26a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(43, 127, 255, 0.5);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .features {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Статистика */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 3rem 0;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Специфические стили для модерации */
+        .moderation-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* Стили для контента статута */
+        .statute-content {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .statute-section {
+            margin-bottom: 3rem;
+        }
+
+        .statute-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .statute-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            border-bottom: 2px solid var(--accent-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .statute-section h3 {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent-secondary);
+        }
+
+        .statute-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .statute-section ul, .statute-section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .statute-section li {
+            margin-bottom: 0.7rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .important-note {
+            background: rgba(255, 173, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .example {
+            background: rgba(43, 127, 255, 0.1);
+            border-left: 4px solid var(--accent-primary);
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .statute-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Бургер-меню -->
+    <div class="burger-menu" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">UG</div>
+            <div class="logo-text">Ukraine <span>GTA5</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
+            <li><a href="statute.html" class="active"><i class="fas fa-book"></i> Статут та регламент</a></li>
+            <li><a href="schedule.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
+            <li><a href="warnings.html"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
+            <li><a href="inactive.html"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
+            <li><a href="staff.html"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
+            <li><a href="commands.html"><i class="fas fa-terminal"></i> Команди</a></li>
+            <li><a href="factions.html"><i class="fas fa-building"></i> Фракції</a></li>
+            <li><a href="info.html"><i class="fas fa-info-circle"></i> Info D.M</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="additional.html"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <section class="hero">
+                <h1 class="animated">Статут та регламент <span class="moderation-badge">модераторів</span></h1>
+                <p class="animated delay-1">Цей документ визначає правила, обов'язки та заборони для модераторів Discord сервера Ukraine GTA5. Уважно ознайомтесь з усіма положеннями.</p>
+                <p class="animated delay-2">Незнання статуту не звільняє вас від відповідальності. Усі модератори зобов'язані дотримуватись цих правил.</p>
+            </section>
+            
+            <div class="statute-content">
+                <div class="statute-section">
+                    <h2>Основні положення</h2>
+                    <p>Регламент модераторів - це документ, в якому прописані обов’язки та заборони для модераторів ДС.</p>
+                    <div class="important-note">
+                        <p>Незнання статуту не звільняє вас від відповідальності.</p>
+                    </div>
+                    <p>Модератори діскорду - це команда, яка слідкує за порушеннями правил діскорд сервера.</p>
+                    <p>Модератор - людина стримана, логічна та з холодним розсудом, яка дотримується правил поводження у колективі.</p>
+                    <p>Модератор не вирішує/втручається в проблеми ігрового та RP-процесу та не надає привілеї гравцям в грі.</p>
+                    <div class="example">
+                        <p>Приклад: "Замов за мене словечко у Адмінів"</p>
+                        <p>Приклад: "А можеш покликати адміна/дай мені номер ГА/Попроси, щоб мене тп-хнули"</p>
+                    </div>
+                    <p>Модератор тільки видає покарання та попередження у Discord.</p>
+                    <p>Правила Discord серверу – це головний документ, за яким модератори видають покарання.</p>
+                    <p>Модератор повинен бути прикладом для інших учасників у поведінці та комунікації.</p>
+                </div>
+
+                <div class="statute-section">
+                    <h2>Повноваження та обов'язки</h2>
+                    <ol>
+                        <li>Модератор зобов’язаний виконувати норматив (онлайн зміни), які встановлюються Тім Лідером.</li>
+                        <li>Слідкувати за тим, щоб учасники не порушували правила сервера.</li>
+                        <li>Вживати заходів щодо учасників, які порушують правила (попередження, м’ют, тимчасове або постійне блокування на сервері).</li>
+                        <li>Модератор зобов’язаний прикріпляти докази до кожного випадку покарання.</li>
+                        <li>Модератор зобов’язаний відповідати користувачам у чаті.</li>
+                        <li>Модератор зобов’язаний слідкувати за голосовими та текстовими каналами.</li>
+                        <li>Модератор має поважати своїх колег та керівників.</li>
+                        <li>Модератор має бути адекватним та стресостійким.</li>
+                        <li>Модератор зобов’язаний приймати рішення на основі фактів, а не особистих симпатій чи антипатій.</li>
+                        <li>Модератор повинен забезпечувати прозорість у своїх діях і рішеннях. Це включає документування та пояснення причин покарань.</li>
+                    </ol>
+                </div>
+
+                <div class="statute-section">
+                    <h2>Заборони</h2>
+                    <ol>
+                        <li>Модератору заборонено розповсюджувати конфіденційну інформацію учасників.</li>
+                        <li>Модератору заборонено використовувати привілеї у своїх цілях.</li>
+                        <li>Модератору заборонено видавати покарання без причина.</li>
+                        <li>Модератору заборонено не дотримуватись субординації з користувачами.</li>
+                        <li>Модератору заборонено ігнорувати прохання керівників.</li>
+                        <li>Модератору заборонено розкривати інформацію, надану їм керівниками, без їх узгодження.</li>
+                        <li>Модератору заборонено перетягувати гравців з одного голосового чату в інший без їх узгодження.</li>
+                        <li>Модератору заборонено грубо/непрофесійно/некоректно поводитись в чатах.</li>
+                        <li>Модератору заборонено ігнорувати питання гравців.</li>
+                        <li>Модератору заборонено займати посади на інших проектах.</li>
+                        <li>Модератору заборонено марно тегати керівників.</li>
+                    </ol>
+                </div>
+
+                <div class="statute-section">
+                    <h2>Санкції та відповідальність</h2>
+                    <ol>
+                        <li>У разі порушення цього регламенту модератор може бути підданий санкціям (штраф, попередження, зняття з посади).</li>
+                        <li>Модератор несе відповідальність за свої дії та рішення.</li>
+                        <li>У разі серйозних порушень або зловживань повноваженнями модератор може бути притягнутий до відповідальності згідно цього регламенту та правил діскорду.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Ukraine GTA 5 Moderation System © 2023. Всі права захищені.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Анимация элементов при прокрутке
+        const animatedElements = document.querySelectorAll('.animated');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.visibility = 'visible';
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => {
+            el.style.visibility = 'hidden';
+            observer.observe(el);
+        });
+      
+        // Показать активную страницу в меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuLinks = document.querySelectorAll('.nav-menu a');
+            
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
