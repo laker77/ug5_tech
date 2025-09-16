@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Команди | Ukraine GTA5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1d2229;
+            --accent-primary: #2b7fff;
+            --accent-secondary: #6c42f5;
+            --accent-green: #00d26a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff5252;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .burger-menu:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(43, 127, 255, 0.5);
+        }
+
+        .burger-menu i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: var(--bg-secondary);
+            z-index: 999;
+            transition: var(--transition);
+            padding: 2rem 1.5rem;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Специфические стили для модерации */
+        .moderation-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* Стили для команд */
+        .commands-container {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .commands-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .commands-intro h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .commands-intro p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .command-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .command-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .command-section:hover::before {
+            transform: scaleX(1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .time-units {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .time-unit:hover {
+            background: rgba(43, 127, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .unit-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .unit-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .command-examples {
+            margin-top: 1.5rem;
+        }
+
+        .example-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
+        .command-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            font-family: 'Roboto Mono', monospace;
+            border-left: 3px solid var(--accent-primary);
+            transition: var(--transition);
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .command-description {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .punishment-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .punishment-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .punishment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .punishment-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .punishment-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .punishment-command {
+            font-family: 'Roboto Mono', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .punishment-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .burger-menu {
+                top: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .commands-container {
+                padding: 1.5rem;
+            }
+
+            .time-units {
+                grid-template-columns: 1fr;
+            }
+
+            .punishment-commands {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Бургер-меню -->
+    <div class="burger-menu" id="burgerMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Бічне меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">UG</div>
+            <div class="logo-text">Ukraine <span>GTA5</span></div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
+            <li><a href="statute.html"><i class="fas fa-book"></i> Статут та регламент</a></li>
+            <li><a href="schedule.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
+            <li><a href="warnings.html"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
+            <li><a href="inactive.html"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
+            <li><a href="staff.html"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
+            <li><a href="commands.html" class="active"><i class="fas fa-terminal"></i> Команди</a></li>
+            <li><a href="factions.html"><i class="fas fa-building"></i> Фракції</a></li>
+            <li><a href="info.html"><i class="fas fa-info-circle"></i> Info D.M</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="additional.html"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <section class="hero">
+                <h1 class="animated">Команди модератора <span class="moderation-badge">Ukraine GTA5</span></h1>
+                <p class="animated delay-1">Вітаю, шановний Discord Moderator! У цьому розділі ви можете ознайомитися з командами, доступними для модераторів Discord.</p>
+            </section>
+            
+            <div class="commands-container">
+                <div class="commands-intro">
+                    <h2>Система команд модерації</h2>
+                    <p>Нижче наведено список усіх доступних команд для керування користувачами та модерації сервера.</p>
+                </div>
+                
+                <div class="commands-grid">
+                    <!-- Блок одиниць часу -->
+                    <div class="command-section animated delay-1">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3 class="section-title">Одиниці часу для покарань</h3>
+                        </div>
+                        
+                        <div class="time-units">
+                            <div class="time-unit">
+                                <div class="unit-value">m</div>
+                                <div class="unit-description">хвилини</div>
+                            </div>
+                            <div class="time-unit">
+                                <div class="unit-value">h</div>
+                                <div class="unit-description">години</div>
+                            </div>
+                            <div class="time-unit">
+                                <div class="unit-value">d</div>
+                                <div class="unit-description">дні</div>
+                            </div>
+                        </div>
+                        
+                        <div class="command-examples">
+                            <h4 class="example-title">Приклади використання:</h4>
+                            <div class="command-item">
+                                !mute @користувач 30m P.2
+                                <div class="command-description">Видати мут на 30 хвилин за пункт правил 2</div>
+                            </div>
+                            <div class="command-item">
+                                !mute @користувач 2h P.1
+                                <div class="command-description">Видати мут на 2 години за пункт правил 1</div>
+                            </div>
+                            <div class="command-item">
+                                !ban @користувач 15d P.11
+                                <div class="command-description">Видати бан на 15 днів за пункт правил 11</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Блок прикладів команд -->
+                    <div class="command-section animated delay-2">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3 class="section-title">Приклади команд</h3>
+                        </div>
+                        
+                        <div class="command-examples">
+                            <div class="command-item">
+                                !mute ID 30m P.2
+                                <div class="command-description">Мут на 30 хвилин за порушення пункту 2 правил</div>
+                            </div>
+                            <div class="command-item">
+                                !mute ID 2h P.1
+                                <div class="command-description">Мут на 2 години за порушення пункту 1 правил</div>
+                            </div>
+                            <div class="command-item">
+                                !ban ID 15d P.11
+                                <div class="command-description">Бан на 15 днів за порушення пункту 11 правил</div>
+                            </div>
+                            <div class="command-item">
+                                !warn ID P.3
+                                <div class="command-description">Попередження за порушення пункту 3 правил</div>
+                            </div>
+                            <div class="command-item">
+                                !kick ID P.5
+                                <div class="command-description">Кік за порушення пункту 5 правил</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Блок зняття покарань -->
+                <div class="command-section animated delay-3">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-unlock"></i>
+                        </div>
+                        <h3 class="section-title">Зняття покарань</h3>
+                    </div>
+                    
+                    <div class="punishment-commands">
+                        <div class="punishment-card">
+                            <div class="punishment-icon">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <h4 class="punishment-title">Зняття муту</h4>
+                            <div class="punishment-command">!unmute ID</div>
+                            <p class="punishment-description">Зняти мут з користувача за вказаним ID</p>
+                        </div>
+                        
+                        <div class="punishment-card">
+                            <div class="punishment-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <h4 class="punishment-title">Зняття бана</h4>
+                            <div class="punishment-command">!unban ID</div>
+                            <p class="punishment-description">Зняти бан з користувача за вказаним ID</p>
+                        </div>
+                        
+                        <div class="punishment-card">
+                            <div class="punishment-icon">
+                                <i class="fas fa-eraser"></i>
+                            </div>
+                            <h4 class="punishment-title">Очищення попереджень</h4>
+                            <div class="punishment-command">!clearwarns ID</div>
+                            <p class="punishment-description">Очистити всі попередження користувача</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Додаткові команди -->
+                <div class="command-section animated delay-4">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="section-title">Додаткові команди</h3>
+                    </div>
+                    
+                    <div class="command-examples">
+                        <div class="command-item">
+                            !clear 10
+                            <div class="command-description">Видалити 10 останніх повідомлень у каналі</div>
+                        </div>
+                        <div class="command-item">
+                            !userinfo ID
+                            <div class="command-description">Переглянути інформацію про користувача</div>
+                        </div>
+                        <div class="command-item">
+                            !serverinfo
+                            <div class="command-description">Переглянути інформацію про сервер</div>
+                        </div>
+                        <div class="command-item">
+                            !modstats
+                            <div class="command-description">Переглянути статистику модерації</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Ukraine GTA 5 Moderation System © 2023. Всі права захищені.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Управление бургер-меню
+        document.getElementById('burgerMenu').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // Закрыть меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const burgerMenu = document.getElementById('burgerMenu');
+            
+            if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Анимация элементов при прокрутке
+        const animatedElements = document.querySelectorAll('.animated');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.visibility = 'visible';
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => {
+            el.style.visibility = 'hidden';
+            observer.observe(el);
+        });
+
+        // Показать активную страницу в меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuLinks = document.querySelectorAll('.nav-menu a');
+            
+            menuLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Копирование команд при клике
+        document.querySelectorAll('.command-item, .punishment-command').forEach(element => {
+            element.addEventListener('click', function() {
+                const textToCopy = this.textContent.split('\n')[0].trim();
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = this.textContent;
+                    this.textContent = 'Скопійовано!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
