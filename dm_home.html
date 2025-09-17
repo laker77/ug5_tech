@@ -710,77 +710,88 @@
         </footer>
     </div>
 
-    <script>
-        const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
-        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
-        const SHEET_NAME = 'Discord'; // Замените на точное имя таблицы
+<script>
+    // ЗАМЕНИТЕ ЭТИ ЗНАЧЕНИЯ НА ТЕ, ЧТО ИСПОЛЬЗУЮТСЯ В РАБОЧЕМ КОДЕ
+    const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
+    const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+    const SHEET_NAME = 'Users'; // Используем то же имя листа, что и в рабочем коде
 
-        // Функция для получения данных из Google Sheets
-        async function getSheetData(sheetName) {
-            try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
-                console.log('Fetching data from:', url);
-                const res = await axios.get(url, { timeout: 10000 });
-                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
-                return res.data.values || [];
-            } catch (error) {
-                console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
-                return [];
-            }
+    // Функция для получения данных из Google Sheets
+    async function getSheetData(sheetName) {
+        try {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+            console.log('Fetching data from:', url);
+            const res = await axios.get(url, { timeout: 10000 });
+            console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+            return res.data.values || [];
+        } catch (error) {
+            console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
+            return [];
+        }
+    }
+
+    // Обработка авторизации через Telegram
+    async function onTelegramAuth(user) {
+        console.log('Telegram auth triggered:', user);
+        if (!user || !user.username) {
+            console.error('Invalid user data:', user);
+            showAccessDenied();
+            return;
         }
 
-        // Обработка авторизации через Telegram
-        async function onTelegramAuth(user) {
-            console.log('Telegram auth triggered:', user);
-            if (!user || !user.username) {
-                console.error('Invalid user data:', user);
+        const telegramUsername = '@' + user.username;
+        console.log('Processing user:', telegramUsername);
+
+        try {
+            const usersData = await getSheetData(SHEET_NAME);
+            console.log('Raw data from sheet:', usersData);
+            
+            if (!usersData.length) {
+                console.error('No users data found in sheet:', SHEET_NAME);
                 showAccessDenied();
                 return;
             }
 
-            const telegramUsername = '@' + user.username;
-            console.log('Processing user:', telegramUsername);
+            const headers = usersData[0];
+            console.log('Sheet headers:', headers);
+            const telegramColIndex = headers.indexOf('Telegram');
+            console.log('Telegram column index:', telegramColIndex);
 
-            try {
-                const usersData = await getSheetData(SHEET_NAME);
-                if (!usersData.length) {
-                    console.error('No users data found in sheet:', SHEET_NAME);
-                    showAccessDenied();
-                    return;
-                }
+            if (telegramColIndex === -1) {
+                console.error('Telegram column not found in headers:', headers);
+                showAccessDenied();
+                return;
+            }
 
-                const headers = usersData[0];
-                console.log('Sheet headers:', headers);
-                const telegramColIndex = headers.indexOf('Telegram');
+            // Проверяем всех пользователей для отладки
+            console.log('All Telegram values in sheet:');
+            usersData.slice(1).forEach((row, index) => {
+                console.log(`Row ${index + 2}:`, row[telegramColIndex]);
+            });
 
-                if (telegramColIndex === -1) {
-                    console.error('Telegram column not found in headers:', headers);
-                    showAccessDenied();
-                    return;
-                }
+            const userRow = usersData.find(row => 
+                row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+            );
 
-                const userRow = usersData.find(row => 
-                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
-                );
-
-                if (userRow) {
-                    console.log('User found in users data:', userRow);
-                    const userData = {
-                        username: telegramUsername,
-                        nickname: user.first_name || user.username
-                    };
-                    localStorage.setItem('tg_auth', JSON.stringify(userData));
-                    showMainContent(userData.nickname);
-                } else {
-                    console.error('User not found in users data:', telegramUsername);
-                    localStorage.removeItem('tg_auth');
-                    showAccessDenied();
-                }
-            } catch (error) {
-                console.error('Error during authorization check:', error.message, error.response?.data);
+            if (userRow) {
+                console.log('User found in sheet:', userRow);
+                const userData = {
+                    username: telegramUsername,
+                    nickname: user.first_name || user.username
+                };
+                localStorage.setItem('tg_auth', JSON.stringify(userData));
+                showMainContent(userData.nickname);
+            } else {
+                console.error('User not found in sheet. Looking for:', telegramUsername);
+                localStorage.removeItem('tg_auth');
                 showAccessDenied();
             }
+        } catch (error) {
+            console.error('Error during authorization check:', error);
+            showAccessDenied();
         }
+    }
+
 
         // Показать основной контент после авторизации
         function showMainContent(nickname) {
