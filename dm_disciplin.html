@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -496,6 +497,177 @@
             font-weight: bold;
         }
 
+        /* Стили для авторизации */
+        #login-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(43, 127, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .telegram-button-wrapper {
+            display: inline-block;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .telegram-button-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(43, 127, 255, 0.7);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        #access-denied-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .access-denied-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 82, 82, 0.5);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .access-denied-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .access-denied-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .access-denied-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .back-to-login-btn {
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-to-login-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        #logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .hero h1 {
@@ -528,12 +700,63 @@
             .penalty-grid {
                 grid-template-columns: 1fr;
             }
+
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Экран авторизации -->
+    <div id="login-section">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--text-primary);"></i>
+            </div>
+            <h1 class="login-title">Вхід у розділ модерації</h1>
+            <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
+            <div class="telegram-button-wrapper">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="ticket_tracker_UG_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="login-footer">
+                Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран отказа в доступе -->
+    <div id="access-denied-section" class="hidden">
+        <div class="access-denied-content">
+            <div class="access-denied-icon">🚫</div>
+            <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
+            <p class="access-denied-message">
+                Ваш обліковий запис не має доступу до цієї системи.<br>
+                Будь ласка, зверніться до адміністратора для отримання додаткової інформації.
+            </p>
+            <button class="back-to-login-btn" onclick="logout()">Повернутися до входу</button>
+        </div>
+    </div>
+
+    <!-- Кнопка выхода -->
+    <button id="logout-btn" class="hidden">Вийти</button>
+
     <!-- Бургер-меню -->
-    <div class="burger-menu" id="burgerMenu">
+    <div class="burger-menu hidden" id="burgerMenu">
         <i class="fas fa-bars"></i>
     </div>
 
@@ -559,7 +782,7 @@
         </ul>
     </div>
 
-    <div class="main-content" id="mainContent">
+    <div class="main-content hidden" id="mainContent">
         <div class="container">
             <section class="hero">
                 <h1 class="animated">Система Доган/Попереджень/Штрафів <span class="moderation-badge">Ukraine GTA5</span></h1>
@@ -647,12 +870,133 @@
         
         <footer>
             <div class="container">
-    <p>Ukraine Gta 5 © | Сайт створено Gromov | Контент – Parkhyts</p>
+                <p>Ukraine Gta 5 © | Сайт створено Gromov | Контент – Parkhyts</p>
             </div>
         </footer>
     </div>
 
     <script>
+        // ЗАМЕНИТЕ ЭТИ ЗНАЧЕНИЯ НА ТЕ, ЧТО ИСПОЛЬЗУЮТСЯ В РАБОЧЕМ КОДЕ
+        const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
+        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+        const SHEET_NAME = 'Discord';
+
+        // Функция для получения данных из Google Sheets
+        async function getSheetData(sheetName) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+                console.log('Fetching data from:', url);
+                const res = await axios.get(url, { timeout: 10000 });
+                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+                return res.data.values || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
+                return [];
+            }
+        }
+
+        // Обработка авторизации через Telegram
+        async function onTelegramAuth(user) {
+            console.log('Telegram auth triggered:', user);
+            if (!user || !user.username) {
+                console.error('Invalid user data:', user);
+                showAccessDenied();
+                return;
+            }
+
+            const telegramUsername = '@' + user.username;
+            console.log('Processing user:', telegramUsername);
+
+            try {
+                const usersData = await getSheetData(SHEET_NAME);
+                console.log('Raw data from sheet:', usersData);
+                
+                if (!usersData.length) {
+                    console.error('No users data found in sheet:', SHEET_NAME);
+                    showAccessDenied();
+                    return;
+                }
+
+                const headers = usersData[0];
+                console.log('Sheet headers:', headers);
+                const telegramColIndex = headers.indexOf('Telegram');
+                console.log('Telegram column index:', telegramColIndex);
+
+                if (telegramColIndex === -1) {
+                    console.error('Telegram column not found in headers:', headers);
+                    showAccessDenied();
+                    return;
+                }
+
+                console.log('All Telegram values in sheet:');
+                usersData.slice(1).forEach((row, index) => {
+                    console.log(`Row ${index + 2}:`, row[telegramColIndex]);
+                });
+
+                const userRow = usersData.find(row => 
+                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+                );
+
+                if (userRow) {
+                    console.log('User found in sheet:', userRow);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('User not found in sheet. Looking for:', telegramUsername);
+                    localStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error('Error during authorization check:', error);
+                showAccessDenied();
+            }
+        }
+
+        // Показать основной контент после авторизации
+        function showMainContent(nickname) {
+            console.log('Showing main content for:', nickname);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('burgerMenu').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            document.getElementById('access-denied-section').classList.add('hidden');
+            document.querySelector('.hero h1').innerText = `Вітаємо, ${nickname}!`;
+        }
+
+        // Показать экран отказа в доступе
+        function showAccessDenied() {
+            console.log('Showing access denied section');
+            document.getElementById('access-denied-section').classList.remove('hidden');
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+        }
+
+        // Показать форму входа
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').classList.add('hidden');
+            document.querySelector('.hero h1').innerText = 'Система Доган/Попереджень/Штрафів';
+        }
+
+        // Выход из системы
+        function logout() {
+            console.log('Logging out');
+            localStorage.removeItem('tg_auth');
+            showLoginForm();
+        }
+
         // Управление бургер-меню
         document.getElementById('burgerMenu').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -689,6 +1033,9 @@
 
         // Показать активную страницу в меню
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
             const currentPage = window.location.pathname.split('/').pop();
             const menuLinks = document.querySelectorAll('.nav-menu a');
             
@@ -698,6 +1045,22 @@
                     link.classList.add('active');
                 }
             });
+
+            const savedAuth = localStorage.getItem('tg_auth');
+            if (savedAuth) {
+                try {
+                    console.log('Found saved auth:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
+                    showMainContent(userData.nickname);
+                } catch (e) {
+                    console.error('Error parsing saved auth:', e);
+                    localStorage.removeItem('tg_auth');
+                    showLoginForm();
+                }
+            } else {
+                console.log('No saved auth, showing login form');
+                showLoginForm();
+            }
         });
     </script>
 </body>
