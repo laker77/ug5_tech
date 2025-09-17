@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заявка на неактив | Ukraine GTA5</title>
+    <title>Фракції | Ukraine GTA5</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -23,6 +24,14 @@
             --danger: #ff5252;
             --border-radius: 12px;
             --transition: all 0.3s ease;
+            
+            --gov-color: #00c853;
+            --police-color: #2b7fff;
+            --medical-color: #ff5252;
+            --military-color: #5d7eb8;
+            --media-color: #ffab00;
+            --criminal-color: #9c27b0;
+            --mafia-color: #b71c1c;
         }
 
         * {
@@ -183,189 +192,6 @@
             line-height: 1.8;
         }
 
-        .features {
-            margin: 4rem 0;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 2.5rem;
-            text-align: center;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 2px;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            height: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            transform: scaleX(0);
-            transition: var(--transition);
-            transform-origin: left;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
-            border-color: rgba(43, 127, 255, 0.2);
-        }
-
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2rem;
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        .btn {
-            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.8rem;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
-        }
-
-        .btn-large {
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            margin: 2rem 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        footer {
-            margin-top: 5rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            padding: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Анимации */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animated {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .delay-1 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.4s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.6s;
-        }
-
-        /* Статистика */
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 3rem 0;
-            gap: 1.5rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            flex: 1;
-            min-width: 200px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
         /* Специфические стили для модерации */
         .moderation-badge {
             display: inline-block;
@@ -387,8 +213,8 @@
             box-shadow: 0 0 10px var(--accent-green);
         }
 
-        /* Стили для контента неактиву */
-        .inactive-content {
+        /* Стили для фракций */
+        .factions-container {
             background-color: var(--bg-card);
             border-radius: var(--border-radius);
             padding: 2.5rem;
@@ -397,126 +223,407 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .inactive-section {
+        .factions-intro {
+            text-align: center;
             margin-bottom: 3rem;
         }
 
-        .inactive-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .inactive-section h2 {
+        .factions-intro h2 {
             font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--accent-primary);
-            border-bottom: 2px solid var(--accent-secondary);
-            padding-bottom: 0.5rem;
-        }
-
-        .inactive-section h3 {
-            font-size: 1.4rem;
-            margin: 1.5rem 0 1rem;
-            color: var(--accent-secondary);
-        }
-
-        .inactive-section p {
             margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .factions-intro p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
             line-height: 1.7;
-            color: var(--text-secondary);
         }
 
-        .inactive-section ul, .inactive-section ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .inactive-section li {
-            margin-bottom: 0.7rem;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .important-note {
-            background: rgba(255, 173, 0, 0.1);
-            border-left: 4px solid var(--warning);
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 4px;
-        }
-
-        .danger-note {
-            background: rgba(255, 82, 82, 0.1);
-            border-left: 4px solid var(--danger);
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 4px;
-        }
-
-        .success-note {
-            background: rgba(0, 200, 83, 0.1);
-            border-left: 4px solid var(--success);
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 4px;
-        }
-
-        .inactive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .inactive-card {
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
             background: rgba(255, 255, 255, 0.03);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .view-toggle button {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--border-radius);
             transition: var(--transition);
         }
 
-        .inactive-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .view-toggle button.active {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(43, 127, 255, 0.3);
         }
 
-        .inactive-card h3 {
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .factions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .inactive-card ul {
-            margin: 0;
-        }
-
-        .inactive-card li {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .inactive-card li:before {
-            content: '•';
-            color: var(--accent-primary);
-            font-weight: bold;
-        }
-
-        .discord-button-container {
-            text-align: center;
-            margin: 2.5rem 0;
-            padding: 2rem;
+        .faction-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .faction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .faction-card.gov::before { background: var(--gov-color); }
+        .faction-card.police::before { background: var(--police-color); }
+        .faction-card.medical::before { background: var(--medical-color); }
+        .faction-card.military::before { background: var(--military-color); }
+        .faction-card.media::before { background: var(--media-color); }
+        .faction-card.criminal::before { background: var(--criminal-color); }
+        .faction-card.mafia::before { background: var(--mafia-color); }
+
+        .faction-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .faction-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .faction-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faction-icon.gov { background: linear-gradient(135deg, var(--gov-color) 0%, #00e676 100%); }
+        .faction-icon.police { background: linear-gradient(135deg, var(--police-color) 0%, #42a5f5 100%); }
+        .faction-icon.medical { background: linear-gradient(135deg, var(--medical-color) 0%, #ff7676 100%); }
+        .faction-icon.military { background: linear-gradient(135deg, var(--military-color) 0%, #7e9cd6 100%); }
+        .faction-icon.media { background: linear-gradient(135deg, var(--media-color) 0%, #ffca28 100%); }
+        .faction-icon.criminal { background: linear-gradient(135deg, var(--criminal-color) 0%, #ba68c8 100%); }
+        .faction-icon.mafia { background: linear-gradient(135deg, var(--mafia-color) 0%, #e53935 100%); }
+
+        .faction-name {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .faction-type {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .faction-type.gov { background-color: rgba(0, 200, 83, 0.15); color: var(--gov-color); }
+        .faction-type.police { background-color: rgba(43, 127, 255, 0.15); color: var(--police-color); }
+        .faction-type.medical { background-color: rgba(255, 82, 82, 0.15); color: var(--medical-color); }
+        .faction-type.military { background-color: rgba(93, 126, 184, 0.15); color: var(--military-color); }
+        .faction-type.media { background-color: rgba(255, 171, 0, 0.15); color: var(--media-color); }
+        .faction-type.criminal { background-color: rgba(156, 39, 176, 0.15); color: var(--criminal-color); }
+        .faction-type.mafia { background-color: rgba(183, 28, 28, 0.15); color: var(--mafia-color); }
+
+        .factions-table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            margin-bottom: 3rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .discord-button-container p {
-            margin-bottom: 1.5rem;
+        .factions-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .factions-table th {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+        }
+
+        .factions-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .factions-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .factions-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .factions-table td {
+            padding: 1.2rem 1rem;
+            color: var(--text-primary);
+        }
+
+        .factions-table td:first-child {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .type-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Стили для авторизации */
+        #login-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(43, 127, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
             color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .telegram-button-wrapper {
+            display: inline-block;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(43, 127, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .telegram-button-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(43, 127, 255, 0.7);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        #access-denied-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0d14 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .access-denied-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 82, 82, 0.5);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .access-denied-icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .access-denied-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .access-denied-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .back-to-login-btn {
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-to-login-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        #logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--danger);
+            color: var(--text-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background: #e63939;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         /* Адаптивность */
@@ -525,7 +632,7 @@
                 font-size: 2.2rem;
             }
             
-            .card-grid {
+            .factions-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -540,23 +647,83 @@
                 padding: 1rem;
             }
 
-            .stats {
-                flex-direction: column;
-            }
-
-            .inactive-content {
+            .factions-container {
                 padding: 1.5rem;
             }
 
-            .inactive-grid {
-                grid-template-columns: 1fr;
+            .view-toggle {
+                flex-direction: column;
+            }
+
+            .view-toggle button {
+                margin-bottom: 0.5rem;
+            }
+
+            .factions-table {
+                font-size: 0.9rem;
+            }
+
+            .factions-table th, 
+            .factions-table td {
+                padding: 0.8rem 0.5rem;
+            }
+
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Экран авторизации -->
+    <div id="login-section">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--text-primary);"></i>
+            </div>
+            <h1 class="login-title">Вхід у розділ модерації</h1>
+            <p class="login-subtitle">Увійдіть через Telegram для доступу до системи</p>
+            <div class="telegram-button-wrapper">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="ticket_tracker_UG_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="login-footer">
+                Потрібна допомога? <a href="support.html">Зверніться до підтримки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран отказа в доступе -->
+    <div id="access-denied-section" class="hidden">
+        <div class="access-denied-content">
+            <div class="access-denied-icon">🚫</div>
+            <h1 class="access-denied-title">ВІДМОВЛЕНО У ДОСТУПІ</h1>
+            <p class="access-denied-message">
+                Ваш обліковий запис не має доступу до цієї системи.<br>
+                Будь ласка, зверніться до адміністратора для отримання додаткової інформації.
+            </p>
+            <button class="back-to-login-btn" onclick="logout()">Повернутися до входу</button>
+        </div>
+    </div>
+
+    <!-- Кнопка выхода -->
+    <button id="logout-btn" class="hidden">Вийти</button>
+
     <!-- Бургер-меню -->
-    <div class="burger-menu" id="burgerMenu">
+    <div class="burger-menu hidden" id="burgerMenu">
         <i class="fas fa-bars"></i>
     </div>
 
@@ -582,113 +749,362 @@
         </ul>
     </div>
 
-    <div class="main-content" id="mainContent">
+    <div class="main-content hidden" id="mainContent">
         <div class="container">
             <section class="hero">
-                <h1 class="animated">Заявка на неактив <span class="moderation-badge">Ukraine GTA5</span></h1>
-                <p class="animated delay-1">Інформація про систему неактивів та відпусток. Оформіть заявку на неактив, якщо у вас виникли обставини, що заважають виконанню змін.</p>
+                <h1 class="animated">Фракції сервера <span class="moderation-badge">Ukraine GTA5</span></h1>
+                <p class="animated delay-1">Офіційний список усіх фракцій на сервері Ukraine GTA 5 RolePlay. На сервері представлені різноманітні фракції: від правоохоронних організацій до кримінальних угруповань.</p>
             </section>
             
-            <div class="inactive-content">
-                <div class="inactive-section">
-                    <h2>Загальна інформація про неактиви</h2>
+            <div class="factions-container">
+                <div class="factions-intro">
+                    <h2>Структура фракцій</h2>
+                    <p>Кожна фракція має свою унікальну структуру, правила та завдання. Оберіть спосіб перегляду:</p>
                     
-                    <div class="important-note">
-                        <p><i class="fas fa-info-circle"></i> Неактив – це заміна форс-мажору. Якщо у вас не виходить зробити онлайн зміну, ви можете взяти неактив.</p>
-                    </div>
-                    
-                    <div class="danger-note">
-                        <p><i class="fas fa-money-bill-wave"></i> Зарплата залежить від кількості неактивів, тому краще брати їх якомога менше.</p>
-                    </div>
-                    
-                    <div class="danger-note">
-                        <p><i class="fas fa-exclamation-circle"></i> Зловживання неактивами карається штрафами (-% до ЗП).</p>
-                    </div>
-                    
-                    <div class="danger-note">
-                        <p><i class="fas fa-ban"></i> Якщо ви не виконали норму та не попередили про це S.M, ви отримуєте штраф -2% до ЗП.</p>
+                    <div class="view-toggle">
+                        <button id="cardsView" class="active">Картки</button>
+                        <button id="tableView">Таблиця</button>
                     </div>
                 </div>
-
-                <div class="inactive-section">
-                    <h2>Система відпусток</h2>
-                    
-                    <div class="inactive-grid">
-                        <div class="inactive-card animated delay-1">
-                            <h3><i class="fas fa-calendar-day"></i> Відпустка 7 днів</h3>
-                            <ul>
-                                <li>Зниження ЗП на 25%</li>
-                                <li>Мінімальний термін відпустки</li>
-                                <li>Потребує погодження з керівництвом</li>
-                            </ul>
+                
+                <!-- Представление карточками -->
+                <div id="cardsContainer" class="factions-grid">
+                    <!-- Правительственные -->
+                    <div class="faction-card gov animated delay-1">
+                        <div class="faction-icon gov">
+                            <i class="fas fa-landmark"></i>
                         </div>
-                        
-                        <div class="inactive-card animated delay-2">
-                            <h3><i class="fas fa-calendar-week"></i> Відпустка 14 днів</h3>
-                            <ul>
-                                <li>Зниження ЗП на 50%</li>
-                                <li>Потребує погодження з керівництвом</li>
-                                <li>Завчасно погоджена відпустка</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="inactive-card animated delay-3">
-                            <h3><i class="fas fa-calendar-alt"></i> Більше 14 днів</h3>
-                            <ul>
-                                <li>Індивідуальне обчислення ЗП</li>
-                                <li>Обов'язкове погодження</li>
-                                <li>Можливі додаткові умови</li>
-                            </ul>
-                        </div>
+                        <h3 class="faction-name">Goverment</h3>
+                        <div class="faction-type gov">Урядова організація</div>
                     </div>
                     
-                    <div class="important-note">
-                        <p><i class="fas fa-exclamation-circle"></i> P.S. Мінімальна кількість днів відпустки – 7 днів.</p>
+                    <!-- Правоохранительные -->
+                    <div class="faction-card police animated delay-2">
+                        <div class="faction-icon police">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="faction-name">LSPD</h3>
+                        <div class="faction-type police">Правоохоронна</div>
+                    </div>
+                    
+                    <div class="faction-card police animated delay-3">
+                        <div class="faction-icon police">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="faction-name">BCSD</h3>
+                        <div class="faction-type police">Правоохоронна</div>
+                    </div>
+                    
+                    <div class="faction-card police animated delay-1">
+                        <div class="faction-icon police">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h3 class="faction-name">FIB</h3>
+                        <div class="faction-type police">Правоохоронна</div>
+                    </div>
+                    
+                    <!-- Медицинские -->
+                    <div class="faction-card medical animated delay-2">
+                        <div class="faction-icon medical">
+                            <i class="fas fa-ambulance"></i>
+                        </div>
+                        <h3 class="faction-name">EMS</h3>
+                        <div class="faction-type medical">Медична служба</div>
+                    </div>
+                    
+                    <!-- Военные -->
+                    <div class="faction-card military animated delay-3">
+                        <div class="faction-icon military">
+                            <i class="fas fa-fighter-jet"></i>
+                        </div>
+                        <h3 class="faction-name">U.S Army</h3>
+                        <div class="faction-type military">Військова організація</div>
+                    </div>
+                    
+                    <!-- Медиа -->
+                    <div class="faction-card media animated delay-1">
+                        <div class="faction-icon media">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <h3 class="faction-name">Weazel News</h3>
+                        <div class="faction-type media">Медіа організація</div>
+                    </div>
+                    
+                    <!-- Криминальные -->
+                    <div class="faction-card criminal animated delay-2">
+                        <div class="faction-icon criminal">
+                            <i class="fas fa-mask"></i>
+                        </div>
+                        <h3 class="faction-name">The Families</h3>
+                        <div class="faction-type criminal">Кримінальна угруповання</div>
+                    </div>
+                    
+                    <div class="faction-card criminal animated delay-3">
+                        <div class="faction-icon criminal">
+                            <i class="fas fa-skull"></i>
+                        </div>
+                        <h3 class="faction-name">The Ballas Gang</h3>
+                        <div class="faction-type criminal">Кримінальна угруповання</div>
+                    </div>
+                    
+                    <div class="faction-card criminal animated delay-1">
+                        <div class="faction-icon criminal">
+                            <i class="fas fa-gun"></i>
+                        </div>
+                        <h3 class="faction-name">Northside Vagos</h3>
+                        <div class="faction-type criminal">Кримінальна угруповання</div>
+                    </div>
+                    
+                    <div class="faction-card criminal animated delay-2">
+                        <div class="faction-icon criminal">
+                            <i class="fas fa-dragon"></i>
+                        </div>
+                        <h3 class="faction-name">Marabunta Grande</h3>
+                        <div class="faction-type criminal">Кримінальна угруповання</div>
+                    </div>
+                    
+                    <!-- Мафия -->
+                    <div class="faction-card mafia animated delay-3">
+                        <div class="faction-icon mafia">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3 class="faction-name">Київська Мафія</h3>
+                        <div class="faction-type mafia">Мафія</div>
+                    </div>
+                    
+                    <div class="faction-card mafia animated delay-1">
+                        <div class="faction-icon mafia">
+                            <i class="fas fa-ring"></i>
+                        </div>
+                        <h3 class="faction-name">Італійська Мафія</h3>
+                        <div class="faction-type mafia">Мафія</div>
+                    </div>
+                    
+                    <div class="faction-card mafia animated delay-2">
+                        <div class="faction-icon mafia">
+                            <i class="fas fa-dragon"></i>
+                        </div>
+                        <h3 class="faction-name">Китайська Мафія</h3>
+                        <div class="faction-type mafia">Мафія</div>
                     </div>
                 </div>
-
-                <div class="inactive-section">
-                    <h2>Подати заявку на неактив</h2>
-                    
-                    <div class="discord-button-container">
-                        <p>Для подачі заявки на неактив або відпустку, будь ласка, зверніться через наш Discord сервер.</p>
-                        <a href="https://discord.gg/ваш-сервер" class="btn btn-large" target="_blank">
-                            <i class="fab fa-discord"></i> Подати заявку в Discord
-                        </a>
-                        <p class="small-text">Натиснувши на кнопку, ви будете перенаправлені на наш Discord сервер</p>
-                    </div>
-                </div>
-
-                <div class="inactive-section">
-                    <h2>Важливі зауваження</h2>
-                    
-                    <div class="success-note">
-                        <p><i class="fas fa-lightbulb"></i> Заявку на неактив слід подавати заздалегідь, коли це можливо.</p>
-                    </div>
-                    
-                    <div class="important-note">
-                        <p><i class="fas fa-clock"></i> У разі раптових обставин, повідомте про неактив якнайшвидше.</p>
-                    </div>
-                    
-                    <div class="danger-note">
-                        <p><i class="fas fa-times-circle"></i> Неповідомлення про неактив призводить до штрафних санкцій.</p>
-                    </div>
-                    
-                    <div class="important-note">
-                        <p><i class="fas fa-headset"></i> У разі виникнення питань звертайтеся до S.M або Тім Лідера.</p>
-                    </div>
+                
+                <!-- Представление таблицей -->
+                <div id="tableContainer" class="factions-table-container" style="display: none;">
+                    <table class="factions-table">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Назва</th>
+                                <th>Тип</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Goverment</td>
+                                <td><span class="type-badge gov">Урядова організація</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>LSPD</td>
+                                <td><span class="type-badge police">Правоохоронна</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>BCSD</td>
+                                <td><span class="type-badge police">Правоохоронна</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>FIB</td>
+                                <td><span class="type-badge police">Правоохоронна</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>EMS</td>
+                                <td><span class="type-badge medical">Медична служба</span></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>U.S Army</td>
+                                <td><span class="type-badge military">Військова організація</span></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Weazel News</td>
+                                <td><span class="type-badge media">Медіа організація</span></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>The Families</td>
+                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>The Ballas Gang</td>
+                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Northside Vagos</td>
+                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>Marabunta Grande</td>
+                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>Київська Мафія</td>
+                                <td><span class="type-badge mafia">Мафія</span></td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>Італійська Мафія</td>
+                                <td><span class="type-badge mafia">Мафія</span></td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>Китайська Мафія</td>
+                                <td><span class="type-badge mafia">Мафія</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
         
         <footer>
             <div class="container">
-    <p>Ukraine Gta 5 © | Сайт створено Gromov | Контент – Parkhyts</p>
+                <p>Ukraine Gta 5 © | Сайт створено Gromov | Контент – Parkhyts</p>
             </div>
         </footer>
     </div>
 
     <script>
+        // ЗАМЕНИТЕ ЭТИ ЗНАЧЕНИЯ НА ТЕ, ЧТО ИСПОЛЬЗУЮТСЯ В РАБОЧЕМ КОДЕ
+        const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
+        const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
+        const SHEET_NAME = 'Discord';
+
+        // Функция для получения данных из Google Sheets
+        async function getSheetData(sheetName) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+                console.log('Fetching data from:', url);
+                const res = await axios.get(url, { timeout: 10000 });
+                console.log(`Data fetched for sheet ${sheetName}:`, res.data.values);
+                return res.data.values || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${sheetName}:`, error.message, error.response?.data);
+                return [];
+            }
+        }
+
+        // Обработка авторизации через Telegram
+        async function onTelegramAuth(user) {
+            console.log('Telegram auth triggered:', user);
+            if (!user || !user.username) {
+                console.error('Invalid user data:', user);
+                showAccessDenied();
+                return;
+            }
+
+            const telegramUsername = '@' + user.username;
+            console.log('Processing user:', telegramUsername);
+
+            try {
+                const usersData = await getSheetData(SHEET_NAME);
+                console.log('Raw data from sheet:', usersData);
+                
+                if (!usersData.length) {
+                    console.error('No users data found in sheet:', SHEET_NAME);
+                    showAccessDenied();
+                    return;
+                }
+
+                const headers = usersData[0];
+                console.log('Sheet headers:', headers);
+                const telegramColIndex = headers.indexOf('Telegram');
+                console.log('Telegram column index:', telegramColIndex);
+
+                if (telegramColIndex === -1) {
+                    console.error('Telegram column not found in headers:', headers);
+                    showAccessDenied();
+                    return;
+                }
+
+                console.log('All Telegram values in sheet:');
+                usersData.slice(1).forEach((row, index) => {
+                    console.log(`Row ${index + 2}:`, row[telegramColIndex]);
+                });
+
+                const userRow = usersData.find(row => 
+                    row[telegramColIndex]?.trim().toLowerCase() === telegramUsername.toLowerCase()
+                );
+
+                if (userRow) {
+                    console.log('User found in sheet:', userRow);
+                    const userData = {
+                        username: telegramUsername,
+                        nickname: user.first_name || user.username
+                    };
+                    localStorage.setItem('tg_auth', JSON.stringify(userData));
+                    showMainContent(userData.nickname);
+                } else {
+                    console.error('User not found in sheet. Looking for:', telegramUsername);
+                    localStorage.removeItem('tg_auth');
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error('Error during authorization check:', error);
+                showAccessDenied();
+            }
+        }
+
+        // Показать основной контент после авторизации
+        function showMainContent(nickname) {
+            console.log('Showing main content for:', nickname);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('burgerMenu').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            document.getElementById('access-denied-section').classList.add('hidden');
+            document.querySelector('.hero h1').innerText = `Вітаємо, ${nickname}!`;
+        }
+
+        // Показать экран отказа в доступе
+        function showAccessDenied() {
+            console.log('Showing access denied section');
+            document.getElementById('access-denied-section').classList.remove('hidden');
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+        }
+
+        // Показать форму входа
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('burgerMenu').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('access-denied-section').classList.add('hidden');
+            document.querySelector('.hero h1').innerText = 'Фракції сервера';
+        }
+
+        // Выход из системы
+        function logout() {
+            console.log('Logging out');
+            localStorage.removeItem('tg_auth');
+            showLoginForm();
+        }
+
         // Управление бургер-меню
         document.getElementById('burgerMenu').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -725,6 +1141,9 @@
 
         // Показать активную страницу в меню
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
             const currentPage = window.location.pathname.split('/').pop();
             const menuLinks = document.querySelectorAll('.nav-menu a');
             
@@ -734,6 +1153,48 @@
                     link.classList.add('active');
                 }
             });
+
+            // Переключение между карточками и таблицей
+            document.getElementById('cardsView').addEventListener('click', function() {
+                document.getElementById('cardsContainer').style.display = 'grid';
+                document.getElementById('tableContainer').style.display = 'none';
+                this.classList.add('active');
+                document.getElementById('tableView').classList.remove('active');
+            });
+
+            document.getElementById('tableView').addEventListener('click', function() {
+                document.getElementById('cardsContainer').style.display = 'none';
+                document.getElementById('tableContainer').style.display = 'block';
+                this.classList.add('active');
+                document.getElementById('cardsView').classList.remove('active');
+            });
+
+            // Анимация карточек при наведении
+            document.querySelectorAll('.faction-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            const savedAuth = localStorage.getItem('tg_auth');
+            if (savedAuth) {
+                try {
+                    console.log('Found saved auth:', savedAuth);
+                    const userData = JSON.parse(savedAuth);
+                    showMainContent(userData.nickname);
+                } catch (e) {
+                    console.error('Error parsing saved auth:', e);
+                    localStorage.removeItem('tg_auth');
+                    showLoginForm();
+                }
+            } else {
+                console.log('No saved auth, showing login form');
+                showLoginForm();
+            }
         });
     </script>
 </body>
