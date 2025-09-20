@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фракції | Ukraine GTA5</title>
+    <title>Заявка на неактив | Ukraine GTA5</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,14 +24,6 @@
             --danger: #ff5252;
             --border-radius: 12px;
             --transition: all 0.3s ease;
-            
-            --gov-color: #00c853;
-            --police-color: #2b7fff;
-            --medical-color: #ff5252;
-            --military-color: #5d7eb8;
-            --media-color: #ffab00;
-            --criminal-color: #9c27b0;
-            --mafia-color: #b71c1c;
         }
 
         * {
@@ -167,253 +159,6 @@
         .main-content {
             padding: 2rem;
             transition: var(--transition);
-        }
-
-        .hero {
-            padding: 6rem 0 3rem;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.8;
-        }
-
-        /* Специфические стили для модерации */
-        .moderation-badge {
-            display: inline-block;
-            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .online-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: var(--accent-green);
-            border-radius: 50%;
-            margin-left: 0.5rem;
-            box-shadow: 0 0 10px var(--accent-green);
-        }
-
-        /* Стили для фракций */
-        .factions-container {
-            background-color: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 2.5rem;
-            margin-bottom: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .factions-intro {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .factions-intro h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--accent-primary);
-        }
-
-        .factions-intro p {
-            color: var(--text-secondary);
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        .view-toggle {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--border-radius);
-            padding: 0.5rem;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .view-toggle button {
-            flex: 1;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        .view-toggle button.active {
-            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            color: white;
-            box-shadow: 0 4px 10px rgba(43, 127, 255, 0.3);
-        }
-
-        .factions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .faction-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .faction-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            transform: scaleX(0);
-            transition: var(--transition);
-            transform-origin: left;
-        }
-
-        .faction-card.gov::before { background: var(--gov-color); }
-        .faction-card.police::before { background: var(--police-color); }
-        .faction-card.medical::before { background: var(--medical-color); }
-        .faction-card.military::before { background: var(--military-color); }
-        .faction-card.media::before { background: var(--media-color); }
-        .faction-card.criminal::before { background: var(--criminal-color); }
-        .faction-card.mafia::before { background: var(--mafia-color); }
-
-        .faction-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .faction-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .faction-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .faction-icon.gov { background: linear-gradient(135deg, var(--gov-color) 0%, #00e676 100%); }
-        .faction-icon.police { background: linear-gradient(135deg, var(--police-color) 0%, #42a5f5 100%); }
-        .faction-icon.medical { background: linear-gradient(135deg, var(--medical-color) 0%, #ff7676 100%); }
-        .faction-icon.military { background: linear-gradient(135deg, var(--military-color) 0%, #7e9cd6 100%); }
-        .faction-icon.media { background: linear-gradient(135deg, var(--media-color) 0%, #ffca28 100%); }
-        .faction-icon.criminal { background: linear-gradient(135deg, var(--criminal-color) 0%, #ba68c8 100%); }
-        .faction-icon.mafia { background: linear-gradient(135deg, var(--mafia-color) 0%, #e53935 100%); }
-
-        .faction-name {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .faction-type {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .faction-type.gov { background-color: rgba(0, 200, 83, 0.15); color: var(--gov-color); }
-        .faction-type.police { background-color: rgba(43, 127, 255, 0.15); color: var(--police-color); }
-        .faction-type.medical { background-color: rgba(255, 82, 82, 0.15); color: var(--medical-color); }
-        .faction-type.military { background-color: rgba(93, 126, 184, 0.15); color: var(--military-color); }
-        .faction-type.media { background-color: rgba(255, 171, 0, 0.15); color: var(--media-color); }
-        .faction-type.criminal { background-color: rgba(156, 39, 176, 0.15); color: var(--criminal-color); }
-        .faction-type.mafia { background-color: rgba(183, 28, 28, 0.15); color: var(--mafia-color); }
-
-        .factions-table-container {
-            overflow-x: auto;
-            border-radius: var(--border-radius);
-            margin-bottom: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .factions-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .factions-table th {
-            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: white;
-        }
-
-        .factions-table tr {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
-        }
-
-        .factions-table tr:last-child {
-            border-bottom: none;
-        }
-
-        .factions-table tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .factions-table td {
-            padding: 1.2rem 1rem;
-            color: var(--text-primary);
-        }
-
-        .factions-table td:first-child {
-            font-weight: 600;
-            color: var(--accent-primary);
-        }
-
-        .type-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
         }
 
         /* Стили для авторизации */
@@ -587,34 +332,147 @@
             50% { transform: scale(1.1); }
         }
 
-        /* Анимации */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Стили для контента страницы */
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .animated {
-            animation: fadeInUp 0.8s ease-out;
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .delay-1 {
-            animation-delay: 0.1s;
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
         }
 
-        .delay-2 {
-            animation-delay: 0.2s;
+        .features {
+            margin: 4rem 0;
         }
 
-        .delay-3 {
-            animation-delay: 0.3s;
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
         }
 
-        .delay-4 {
-            animation-delay: 0.4s;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
         }
 
-        .delay-5 {
-            animation-delay: 0.5s;
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(43, 127, 255, 0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43, 127, 255, 0.3);
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            margin: 2rem 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         footer {
@@ -626,13 +484,221 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Статистика */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 3rem 0;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Специфические стили для модерации */
+        .moderation-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-primary));
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* Стили для контента неактиву */
+        .inactive-content {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .inactive-section {
+            margin-bottom: 3rem;
+        }
+
+        .inactive-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .inactive-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            border-bottom: 2px solid var(--accent-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .inactive-section h3 {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent-secondary);
+        }
+
+        .inactive-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .inactive-section ul, .inactive-section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .inactive-section li {
+            margin-bottom: 0.7rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .important-note {
+            background: rgba(255, 173, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .danger-note {
+            background: rgba(255, 82, 82, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .success-note {
+            background: rgba(0, 200, 83, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .inactive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .inactive-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .inactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .inactive-card h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inactive-card ul {
+            margin: 0;
+        }
+
+        .inactive-card li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inactive-card li:before {
+            content: '•';
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .discord-button-container {
+            text-align: center;
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .discord-button-container p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
             }
             
-            .factions-grid {
+            .card-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -647,37 +713,16 @@
                 padding: 1rem;
             }
 
-            .factions-container {
-                padding: 1.5rem;
-            }
-
-            .view-toggle {
+            .stats {
                 flex-direction: column;
             }
 
-            .view-toggle button {
-                margin-bottom: 0.5rem;
+            .inactive-content {
+                padding: 1.5rem;
             }
 
-            .factions-table {
-                font-size: 0.9rem;
-            }
-
-            .factions-table th, 
-            .factions-table td {
-                padding: 0.8rem 0.5rem;
-            }
-
-            .login-container {
-                padding: 2rem 1.5rem;
-            }
-
-            .login-title {
-                font-size: 1.5rem;
-            }
-
-            .login-subtitle {
-                font-size: 0.9rem;
+            .inactive-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -735,261 +780,131 @@
         </div>
         
         <ul class="nav-menu">
-            <li><a href="dm_home.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
-            <li><a href="dm_statut.html"><i class="fas fa-book"></i> Статут та регламент</a></li>
-            <li><a href="dm_online.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
-            <li><a href="dm_disciplin.html"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
-            <li><a href="dm_neaktiv.html"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
-            <li><a href="dm_staff.html"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
-            <li><a href="dm_commands.html"><i class="fas fa-terminal"></i> Команди</a></li>
-            <li><a href="dm_frac.html"><i class="fas fa-building"></i> Фракції</a></li>
-            <li><a href="#"><i class="fas fa-info-circle"></i> Info D.M</a></li>
-            <li><a href="dm_scriptes.html"><i class="fas fa-code"></i> Скрипти</a></li>
-            <li><a href="#"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
+            <li><a href="index.html"><i class="fas fa-home"></i> Головна сторінка</a></li>
+            <li><a href="statute.html"><i class="fas fa-book"></i> Статут та регламент</a></li>
+            <li><a href="schedule.html"><i class="fas fa-users"></i> Онлайн Зміна <span class="online-indicator"></span></a></li>
+            <li><a href="warnings.html"><i class="fas fa-exclamation-triangle"></i> Система Доган, попереджень, штрафів</a></li>
+            <li><a href="inactive.html" class="active"><i class="fas fa-bed"></i> Заявка на неактив</a></li>
+            <li><a href="staff.html"><i class="fas fa-id-badge"></i> Особовий склад</a></li>
+            <li><a href="commands.html"><i class="fas fa-terminal"></i> Команди</a></li>
+            <li><a href="factions.html"><i class="fas fa-building"></i> Фракції</a></li>
+            <li><a href="info.html"><i class="fas fa-info-circle"></i> Info D.M</a></li>
+            <li><a href="scripts.html"><i class="fas fa-code"></i> Скрипти</a></li>
+            <li><a href="additional.html"><i class="fas fa-plus-circle"></i> Додаткова інформація</a></li>
         </ul>
     </div>
 
     <div class="main-content hidden" id="mainContent">
         <div class="container">
             <section class="hero">
-                <h1 class="animated">Фракції сервера <span class="moderation-badge">Ukraine GTA5</span></h1>
-                <p class="animated delay-1">Офіційний список усіх фракцій на сервері Ukraine GTA 5 RolePlay. На сервері представлені різноманітні фракції: від правоохоронних організацій до кримінальних угруповань.</p>
+                <h1 class="animated">Заявка на неактив <span class="moderation-badge">Ukraine GTA5</span></h1>
+                <p class="animated delay-1">Інформація про систему неактивів та відпусток. Оформіть заявку на неактив, якщо у вас виникли обставини, що заважають виконанню змін.</p>
             </section>
             
-            <div class="factions-container">
-                <div class="factions-intro">
-                    <h2>Структура фракцій</h2>
-                    <p>Кожна фракція має свою унікальну структуру, правила та завдання. Оберіть спосіб перегляду:</p>
+            <div class="inactive-content">
+                <div class="inactive-section">
+                    <h2>Загальна інформація про неактиви</h2>
                     
-                    <div class="view-toggle">
-                        <button id="cardsView" class="active">Картки</button>
-                        <button id="tableView">Таблиця</button>
+                    <div class="important-note">
+                        <p><i class="fas fa-info-circle"></i> Неактив – це заміна форс-мажору. Якщо у вас не виходить зробити онлайн зміну, ви можете взяти неактив.</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-money-bill-wave"></i> Зарплата залежить від кількості неактивів, тому краще брати їх якомога менше.</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-exclamation-circle"></i> Зловживання неактивами карається штрафами (-% до ЗП).</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-ban"></i> Якщо ви не виконали норму та не попередили про це S.M, ви отримуєте штраф -2% до ЗП.</p>
                     </div>
                 </div>
-                
-                <!-- Представление карточками -->
-                <div id="cardsContainer" class="factions-grid">
-                    <!-- Правительственные -->
-                    <div class="faction-card gov animated delay-1">
-                        <div class="faction-icon gov">
-                            <i class="fas fa-landmark"></i>
+
+                <div class="inactive-section">
+                    <h2>Система відпусток</h2>
+                    
+                    <div class="inactive-grid">
+                        <div class="inactive-card animated delay-1">
+                            <h3><i class="fas fa-calendar-day"></i> Відпустка 7 днів</h3>
+                            <ul>
+                                <li>Зниження ЗП на 25%</li>
+                                <li>Мінімальний термін відпустки</li>
+                                <li>Потребує погодження з керівництвом</li>
+                            </ul>
                         </div>
-                        <h3 class="faction-name">Goverment</h3>
-                        <div class="faction-type gov">Урядова організація</div>
+                        
+                        <div class="inactive-card animated delay-2">
+                            <h3><i class="fas fa-calendar-week"></i> Відпустка 14 днів</h3>
+                            <ul>
+                                <li>Зниження ЗП на 50%</li>
+                                <li>Потребує погодження з керівництвом</li>
+                                <li>Завчасно погоджена відпустка</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="inactive-card animated delay-3">
+                            <h3><i class="fas fa-calendar-alt"></i> Більше 14 днів</h3>
+                            <ul>
+                                <li>Індивідуальне обчислення ЗП</li>
+                                <li>Обов'язкове погодження</li>
+                                <li>Можливі додаткові умови</li>
+                            </ul>
+                        </div>
                     </div>
                     
-                    <!-- Правоохранительные -->
-                    <div class="faction-card police animated delay-2">
-                        <div class="faction-icon police">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="faction-name">LSPD</h3>
-                        <div class="faction-type police">Правоохоронна</div>
-                    </div>
-                    
-                    <div class="faction-card police animated delay-3">
-                        <div class="faction-icon police">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="faction-name">BCSD</h3>
-                        <div class="faction-type police">Правоохоронна</div>
-                    </div>
-                    
-                    <div class="faction-card police animated delay-1">
-                        <div class="faction-icon police">
-                            <i class="fas fa-fingerprint"></i>
-                        </div>
-                        <h3 class="faction-name">FIB</h3>
-                        <div class="faction-type police">Правоохоронна</div>
-                    </div>
-                    
-                    <!-- Медицинские -->
-                    <div class="faction-card medical animated delay-2">
-                        <div class="faction-icon medical">
-                            <i class="fas fa-ambulance"></i>
-                        </div>
-                        <h3 class="faction-name">EMS</h3>
-                        <div class="faction-type medical">Медична служба</div>
-                    </div>
-                    
-                    <!-- Военные -->
-                    <div class="faction-card military animated delay-3">
-                        <div class="faction-icon military">
-                            <i class="fas fa-fighter-jet"></i>
-                        </div>
-                        <h3 class="faction-name">U.S Army</h3>
-                        <div class="faction-type military">Військова організація</div>
-                    </div>
-                    
-                    <!-- Медиа -->
-                    <div class="faction-card media animated delay-1">
-                        <div class="faction-icon media">
-                            <i class="fas fa-tv"></i>
-                        </div>
-                        <h3 class="faction-name">Weazel News</h3>
-                        <div class="faction-type media">Медіа організація</div>
-                    </div>
-                    
-                    <!-- Криминальные -->
-                    <div class="faction-card criminal animated delay-2">
-                        <div class="faction-icon criminal">
-                            <i class="fas fa-mask"></i>
-                        </div>
-                        <h3 class="faction-name">The Families</h3>
-                        <div class="faction-type criminal">Кримінальна угруповання</div>
-                    </div>
-                    
-                    <div class="faction-card criminal animated delay-3">
-                        <div class="faction-icon criminal">
-                            <i class="fas fa-skull"></i>
-                        </div>
-                        <h3 class="faction-name">The Ballas Gang</h3>
-                        <div class="faction-type criminal">Кримінальна угруповання</div>
-                    </div>
-                    
-                    <div class="faction-card criminal animated delay-1">
-                        <div class="faction-icon criminal">
-                            <i class="fas fa-gun"></i>
-                        </div>
-                        <h3 class="faction-name">Northside Vagos</h3>
-                        <div class="faction-type criminal">Кримінальна угруповання</div>
-                    </div>
-                    
-                    <div class="faction-card criminal animated delay-2">
-                        <div class="faction-icon criminal">
-                            <i class="fas fa-dragon"></i>
-                        </div>
-                        <h3 class="faction-name">Marabunta Grande</h3>
-                        <div class="faction-type criminal">Кримінальна угруповання</div>
-                    </div>
-                    
-                    <!-- Мафия -->
-                    <div class="faction-card mafia animated delay-3">
-                        <div class="faction-icon mafia">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <h3 class="faction-name">Київська Мафія</h3>
-                        <div class="faction-type mafia">Мафія</div>
-                    </div>
-                    
-                    <div class="faction-card mafia animated delay-1">
-                        <div class="faction-icon mafia">
-                            <i class="fas fa-ring"></i>
-                        </div>
-                        <h3 class="faction-name">Італійська Мафія</h3>
-                        <div class="faction-type mafia">Мафія</div>
-                    </div>
-                    
-                    <div class="faction-card mafia animated delay-2">
-                        <div class="faction-icon mafia">
-                            <i class="fas fa-dragon"></i>
-                        </div>
-                        <h3 class="faction-name">Китайська Мафія</h3>
-                        <div class="faction-type mafia">Мафія</div>
+                    <div class="important-note">
+                        <p><i class="fas fa-exclamation-circle"></i> P.S. Мінімальна кількість днів відпустки – 7 днів.</p>
                     </div>
                 </div>
-                
-                <!-- Представление таблицей -->
-                <div id="tableContainer" class="factions-table-container" style="display: none;">
-                    <table class="factions-table">
-                        <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Назва</th>
-                                <th>Тип</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Goverment</td>
-                                <td><span class="type-badge gov">Урядова організація</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>LSPD</td>
-                                <td><span class="type-badge police">Правоохоронна</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>BCSD</td>
-                                <td><span class="type-badge police">Правоохоронна</span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>FIB</td>
-                                <td><span class="type-badge police">Правоохоронна</span></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>EMS</td>
-                                <td><span class="type-badge medical">Медична служба</span></td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>U.S Army</td>
-                                <td><span class="type-badge military">Військова організація</span></td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>Weazel News</td>
-                                <td><span class="type-badge media">Медіа організація</span></td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>The Families</td>
-                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>The Ballas Gang</td>
-                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>Northside Vagos</td>
-                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td>Marabunta Grande</td>
-                                <td><span class="type-badge criminal">Кримінальна угруповання</span></td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td>Київська Мафія</td>
-                                <td><span class="type-badge mafia">Мафія</span></td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td>Італійська Мафія</td>
-                                <td><span class="type-badge mafia">Мафія</span></td>
-                            </tr>
-                            <tr>
-                                <td>14</td>
-                                <td>Китайська Мафія</td>
-                                <td><span class="type-badge mafia">Мафія</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                <div class="inactive-section">
+                    <h2>Подати заявку на неактив</h2>
+                    
+                    <div class="discord-button-container">
+                        <p>Для подачі заявки на неактив або відпустку, будь ласка, зверніться через наш Discord сервер.</p>
+                        <a href="https://discord.gg/ваш-сервер" class="btn btn-large" target="_blank">
+                            <i class="fab fa-discord"></i> Подати заявку в Discord
+                        </a>
+                        <p class="small-text">Натиснувши на кнопку, ви будете перенаправлені на наш Discord сервер</p>
+                    </div>
+                </div>
+
+                <div class="inactive-section">
+                    <h2>Важливі зауваження</h2>
+                    
+                    <div class="success-note">
+                        <p><i class="fas fa-lightbulb"></i> Заявку на неактив слід подавати заздалегідь, коли це можливо.</p>
+                    </div>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-clock"></i> У разі раптових обставин, повідомте про неактив якнайшвидше.</p>
+                    </div>
+                    
+                    <div class="danger-note">
+                        <p><i class="fas fa-times-circle"></i> Неповідомлення про неактив призводить до штрафних санкцій.</p>
+                    </div>
+                    
+                    <div class="important-note">
+                        <p><i class="fas fa-headset"></i> У разі виникнення питань звертайтеся до S.M або Тім Лідера.</p>
+                    </div>
                 </div>
             </div>
         </div>
         
         <footer>
             <div class="container">
-                <p>Ukraine Gta 5 © | Сайт створено Gromov | Контент – Parkhyts</p>
+                <p>Ukraine GTA 5 Moderation System © 2023. Всі права захищені.</p>
             </div>
         </footer>
     </div>
 
     <script>
-        // ЗАМЕНИТЕ ЭТИ ЗНАЧЕНИЯ НА ТЕ, ЧТО ИСПОЛЬЗУЮТСЯ В РАБОЧЕМ КОДЕ
         const SHEET_ID = '1jwBFjUjRkVDGZsSWMGxXUH5v69m6R9uph0nZ33Y2uOE';
         const API_KEY = 'AIzaSyB3NNELU9ok5mkbHQnBEoOfRtNtPb-y5LU';
         const SHEET_NAME = 'Discord';
 
-        // Функция для получения данных из Google Sheets
         async function getSheetData(sheetName) {
             try {
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
@@ -1003,7 +918,6 @@
             }
         }
 
-        // Обработка авторизации через Telegram
         async function onTelegramAuth(user) {
             console.log('Telegram auth triggered:', user);
             if (!user || !user.username) {
@@ -1064,7 +978,6 @@
             }
         }
 
-        // Показать основной контент после авторизации
         function showMainContent(nickname) {
             console.log('Showing main content for:', nickname);
             document.getElementById('login-section').style.display = 'none';
@@ -1075,7 +988,6 @@
             document.querySelector('.hero h1').innerText = `Вітаємо, ${nickname}!`;
         }
 
-        // Показать экран отказа в доступе
         function showAccessDenied() {
             console.log('Showing access denied section');
             document.getElementById('access-denied-section').classList.remove('hidden');
@@ -1086,7 +998,6 @@
             document.getElementById('logout-btn').classList.add('hidden');
         }
 
-        // Показать форму входа
         function showLoginForm() {
             console.log('Showing login form');
             document.getElementById('login-section').style.display = 'flex';
@@ -1095,51 +1006,28 @@
             document.getElementById('burgerMenu').classList.add('hidden');
             document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('access-denied-section').classList.add('hidden');
-            document.querySelector('.hero h1').innerText = 'Фракції сервера';
+            document.querySelector('.hero h1').innerText = 'Заявка на неактив';
         }
 
-        // Выход из системы
         function logout() {
             console.log('Logging out');
             localStorage.removeItem('tg_auth');
             showLoginForm();
         }
 
-        // Управление бургер-меню
         document.getElementById('burgerMenu').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
         });
 
-        // Закрыть меню при клике вне его
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const burgerMenu = document.getElementById('burgerMenu');
-            
             if (!sidebar.contains(event.target) && !burgerMenu.contains(event.target) && sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
             }
         });
 
-        // Анимация элементов при прокрутке
-        const animatedElements = document.querySelectorAll('.animated');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.visibility = 'visible';
-                    entry.target.style.animationPlayState = 'running';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        animatedElements.forEach(el => {
-            el.style.visibility = 'hidden';
-            observer.observe(el);
-        });
-
-        // Показать активную страницу в меню
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
             document.getElementById('logout-btn').addEventListener('click', logout);
@@ -1152,32 +1040,6 @@
                 if (href === currentPage || (currentPage === '' && href === 'index.html')) {
                     link.classList.add('active');
                 }
-            });
-
-            // Переключение между карточками и таблицей
-            document.getElementById('cardsView').addEventListener('click', function() {
-                document.getElementById('cardsContainer').style.display = 'grid';
-                document.getElementById('tableContainer').style.display = 'none';
-                this.classList.add('active');
-                document.getElementById('tableView').classList.remove('active');
-            });
-
-            document.getElementById('tableView').addEventListener('click', function() {
-                document.getElementById('cardsContainer').style.display = 'none';
-                document.getElementById('tableContainer').style.display = 'block';
-                this.classList.add('active');
-                document.getElementById('cardsView').classList.remove('active');
-            });
-
-            // Анимация карточек при наведении
-            document.querySelectorAll('.faction-card').forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px) scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
             });
 
             const savedAuth = localStorage.getItem('tg_auth');
@@ -1195,6 +1057,23 @@
                 console.log('No saved auth, showing login form');
                 showLoginForm();
             }
+
+            // Анимация элементов при прокрутке
+            const animatedElements = document.querySelectorAll('.animated');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.visibility = 'visible';
+                        entry.target.style.animationPlayState = 'running';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animatedElements.forEach(el => {
+                el.style.visibility = 'hidden';
+                observer.observe(el);
+            });
         });
     </script>
 </body>
