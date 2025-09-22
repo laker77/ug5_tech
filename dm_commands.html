@@ -1062,18 +1062,6 @@
                 showLoginForm();
             }
         });
-
-        // Копирование команд при клике
-        document.querySelectorAll('.command-item, .punishment-command').forEach(element => {
-            element.addEventListener('click', function() {
-                const textToCopy = this.textContent.split('\n')[0].trim();
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    const originalText = this.textContent;
-                    this.textContent = 'Скопійовано!';
-                    setTimeout(() => {
-                        this.textContent = originalText;
-                    }, 1500);
-                });
             });
         });
     </script>
